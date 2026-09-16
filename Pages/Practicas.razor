@@ -1,0 +1,28 @@
+@page "/practicas"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-procesos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Reajuste de selección</h1>
+            <p>Procedimiento para solicitar cambios en la selección de asignaturas.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Cómo solicitar</h3>
+                <p>Rellena el formulario y presenta la justificación académica.</p>
+            </div>
+
+            <div class="card">
+                <h3>Plazos</h3>
+                <p>Consulta las fechas en el calendario académico.</p>
+            </div>
+        </div>
+    </main>
+</div>

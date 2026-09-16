@@ -1,0 +1,28 @@
+@page "/seleccionasignaturas"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-procesos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Selección de Asignaturas</h1>
+            <p>Selecciona las materias disponibles para el periodo actual.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Materias disponibles</h3>
+                <p>Lista de asignaturas abiertas para inscripción.</p>
+            </div>
+
+            <div class="card">
+                <h3>Consejos</h3>
+                <p>Equilibra tu carga para mantener un buen rendimiento académico.</p>
+            </div>
+        </div>
+    </main>
+</div>

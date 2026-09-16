@@ -1,0 +1,28 @@
+@page "/pagoinscripcion"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-pagos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Pago de Inscripción</h1>
+            <p>Opciones y pasos para completar el pago de inscripción.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Formulario de pago</h3>
+                <p>Genera tu referencia de pago e imprime el recibo.</p>
+            </div>
+
+            <div class="card">
+                <h3>Soporte de pagos</h3>
+                <p>Contacto financiero: finanzas@ucsd.edu.do</p>
+            </div>
+        </div>
+    </main>
+</div>

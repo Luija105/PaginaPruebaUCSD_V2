@@ -1,0 +1,37 @@
+@page "/consultaseconomicas"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-consultas">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Consultas Económicas</h1>
+            <p>Estado de cuenta, pagos y opciones de financiamiento.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Estado de cuenta</h3>
+                <p>Saldo actual: <strong>RD$ 0.00</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>Becas</h3>
+                <p>Consulta los requisitos y solicita apoyo económico.</p>
+            </div>
+
+            <div class="card">
+                <h3>Pagos frecuentes</h3>
+                <ul>
+                    <li>Pensión</li>
+                    <li>Inscripción</li>
+                    <li>Reajuste</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>

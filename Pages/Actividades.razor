@@ -1,0 +1,28 @@
+@page "/actividades"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-procesos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Evaluación Universitaria</h1>
+            <p>Encuestas, evaluaciones docentes y procesos académicos.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Encuestas</h3>
+                <p>Participa en las encuestas de evaluación docente.</p>
+            </div>
+
+            <div class="card">
+                <h3>Calendario evaluaciones</h3>
+                <p>Fechas y horarios de exámenes parciales y finales.</p>
+            </div>
+        </div>
+    </main>
+</div>

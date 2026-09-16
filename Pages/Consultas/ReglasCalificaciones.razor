@@ -1,0 +1,28 @@
+@page "/ReglasCalificaciones"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-consultas">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Reglamento de Calificaciones</h1>
+            <p>Políticas sobre aprobación, recuperación y escala de notas.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Escala de calificaciones</h3>
+                <p>90-100: A | 80-89: B | 70-79: C | 60-69: D | &lt;60: F</p>
+            </div>
+
+            <div class="card">
+                <h3>Recuperaciones</h3>
+                <p>Requisitos y plazos para solicitar evaluaciones de recuperación.</p>
+            </div>
+        </div>
+    </main>
+</div>

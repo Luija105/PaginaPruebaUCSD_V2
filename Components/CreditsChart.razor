@@ -1,0 +1,84 @@
+@using PaginaPruebaUCSD_V2.Models
+
+<div class="card">
+    <div class="card-top-row">
+        <div>
+            <h3 class="card-title">Progreso de Créditos</h3>
+            <p class="card-sub">Créditos cursados vs. plan de estudios</p>
+        </div>
+    </div>
+
+    <!-- Summary row -->
+    <div class="credits-summary">
+        <div class="summary-cell"><span class="summary-val navy">@Record.CreditosAprobados</span><span class="summary-lbl">Aprobados</span></div>
+        <div class="summary-cell"><span class="summary-val amber">@Record.CreditosRestantes</span><span class="summary-lbl">Pendientes</span></div>
+        <div class="summary-cell"><span class="summary-val dark">@Record.CreditosTotales</span><span class="summary-lbl">Total</span></div>
+    </div>
+
+    <div class="chart-body">
+        <!-- Radial progress ring -->
+        <div class="radial-wrap">
+            <svg width="128" height="128" viewBox="0 0 128 128">
+                <circle cx="64" cy="64" r="52" fill="none" stroke="#e2e8f0" stroke-width="12" />
+                <circle cx="64" cy="64" r="52" fill="none" stroke="#1a3a6e" stroke-width="12"
+                        stroke-linecap="round"
+                        stroke-dasharray="@Circumference"
+                        stroke-dashoffset="@DashOffset"
+                        transform="rotate(-90 64 64)" />
+                <svg:text x="64" y="56" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a" font-family="'JetBrains Mono',monospace">
+                    @Record.PorcentajeCreditosInt%
+                </svg:text>
+                <svg:text x="64" y="72" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">completado</svg:text>
+                <svg:text x="64" y="86" text-anchor="middle" font-size="9" fill="#64748b" font-family="'JetBrains Mono',monospace">
+                    @Record.CreditosAprobados/@Record.CreditosTotales
+                </svg:text>
+            </svg>
+        </div>
+
+        <!-- Bar chart (pure SVG) -->
+        <div class="bar-chart-wrap">
+            <p class="bar-chart-title">Créditos por Período</p>
+            <svg width="100%" height="120" viewBox="0 0 @SvgW @SvgH" preserveAspectRatio="none">
+                @{
+                    int maxCr  = History.Count > 0 ? History.Max(h => h.Creditos) + 4 : 24;
+                    int barW   = 20;
+                    int gap    = (SvgW - History.Count * barW) / (History.Count + 1);
+                    int labelH = 20;
+                    int chartH = SvgH - labelH;
+                }
+                <!-- Grid lines -->
+                @foreach (var y in new[] { 0.25, 0.5, 0.75, 1.0 })
+                {
+                    double yPos = chartH - chartH * y;
+                    <line x1="0" y1="@yPos" x2="@SvgW" y2="@yPos" stroke="#f1f5f9" stroke-width="1" />
+                }
+                @foreach (var (p, idx) in History.Select((p, i) => (p, i)))
+                {
+                    int x      = gap + idx * (barW + gap);
+                    double h   = (double)p.Creditos / maxCr * chartH;
+                    double y   = chartH - h;
+                    bool isLast = idx == History.Count - 1;
+                    string fill = isLast ? "#c9a227" : "#1a3a6e";
+                    string opacity = isLast ? "1" : $"{0.60 + idx * 0.06:F2}";
+
+                    <rect x="@x" y="@y.ToString("F1")" width="@barW" height="@h.ToString("F1")"
+                          rx="3" fill="@fill" opacity="@opacity" />
+                   <svg:text x="@(x + barW / 2)" y="@(SvgH - 4)" text-anchor="middle" font-size="7" fill="#94a3b8" font-family="'JetBrains Mono',monospace">
+                        @p.Periodo?.Replace("20","")
+                    </svg:text>
+                }
+            </svg>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required AcademicRecord Record { get; set; }
+    [Parameter] public required List<CreditPeriod> History { get; set; }
+
+    private const double TwoPiR = 2 * Math.PI * 52;
+    private const int SvgW = 200, SvgH = 110;
+
+    private string Circumference => TwoPiR.ToString("F2");
+    private string DashOffset    => (TwoPiR - TwoPiR * Record.PorcentajeCreditosInt / 100.0).ToString("F2");
+}

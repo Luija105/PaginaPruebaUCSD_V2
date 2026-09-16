@@ -1,0 +1,28 @@
+@page "/otrospagos"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-pagos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Otros Pagos</h1>
+            <p>Tarifas por servicios, reposiciones y otros cargos.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Servicios</h3>
+                <p>Pago por certificados, duplicado de carné, etc.</p>
+            </div>
+
+            <div class="card">
+                <h3>Formas de pago</h3>
+                <p>Transferencia, pago en ventanilla o plataforma en línea.</p>
+            </div>
+        </div>
+    </main>
+</div>

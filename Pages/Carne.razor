@@ -1,0 +1,28 @@
+@page "/carne"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-servicios">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Carné Estudiantil</h1>
+            <p>Trámites para emisión y renovación del carné estudiantil.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Estado del carné</h3>
+                <p>Tu carné está activo y en buen estado.</p>
+            </div>
+
+            <div class="card">
+                <h3>Renovación</h3>
+                <p>Documentos necesarios: foto, cédula, formulario firmado.</p>
+            </div>
+        </div>
+    </main>
+</div>

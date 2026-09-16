@@ -1,0 +1,28 @@
+@page "/consejeria"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-procesos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Actualizar Datos de Acceso</h1>
+            <p>Procedimiento para actualizar tus credenciales y datos de acceso.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Cambiar contraseña</h3>
+                <p>Usa la opción de "Recuperar contraseña" o contacta soporte.</p>
+            </div>
+
+            <div class="card">
+                <h3>Actualizar correo</h3>
+                <p>Enlaza tu correo institucional para notificaciones importantes.</p>
+            </div>
+        </div>
+    </main>
+</div>

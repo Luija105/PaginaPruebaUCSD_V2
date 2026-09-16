@@ -1,0 +1,65 @@
+@page "/consultasacademicas"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+
+        <div class="page-header">
+            <p class="page-section">Consultas</p>
+            <h1 class="page-title">Consultas Académicas</h1>
+            <p class="page-desc">Solicita información académica, actas y revisa tu expediente.</p>
+        </div>
+
+        <div class="card-grid three-col">
+
+            <!-- Solicitar Acta -->
+            <div class="card info-card">
+                <div class="info-card-icon" style="background:#dbeafe; color:#1a3a6e;">📄</div>
+                <h3 class="info-card-title">Solicitar Acta</h3>
+                <p class="info-card-body">Completa el formulario para solicitar actas y documentos oficiales.</p>
+                <a class="btn-primary info-card-btn" href="/solicituddocumentos">Solicitar documento</a>
+            </div>
+
+            <!-- Historial Académico -->
+            <div class="card info-card">
+                <div class="info-card-icon" style="background:#f0fdf4; color:#166534;">📊</div>
+                <h3 class="info-card-title">Historial Académico</h3>
+                <p class="info-card-body">Revisa y descarga tu historial académico completo en PDF.</p>
+                <!-- TODO: Llamar endpoint que genera el PDF del historial del estudiante
+                     GET /api/estudiante/{id}/historial-pdf -->
+                <button class="btn-secondary info-card-btn" disabled>Próximamente</button>
+            </div>
+
+            <!-- Contacto -->
+            <div class="card info-card">
+                <div class="info-card-icon" style="background:#fef9e7; color:#92400e;">📞</div>
+                <h3 class="info-card-title">Contacto</h3>
+                <p class="info-card-body">
+                    Oficina de Registro Académico<br />
+                    <strong>registro@ucsd.edu.do</strong><br />
+                    Ext. 1234
+                </p>
+                <a class="btn-outline info-card-btn" href="mailto:registro@ucsd.edu.do">Enviar correo</a>
+            </div>
+
+        </div>
+
+        <!-- TODO: Tabla de solicitudes anteriores del estudiante
+             Query: SELECT tipo_documento, fecha_solicitud, estado, fecha_entrega
+                    FROM solicitudes_documentos
+                    WHERE student_id = @id ORDER BY fecha_solicitud DESC -->
+        <div class="card" style="margin-top:1.25rem; padding:1.5rem;">
+            <h3 class="card-title" style="margin-bottom:0.25rem;">Mis Solicitudes Recientes</h3>
+            <p class="card-sub" style="margin-bottom:1rem;">Historial de documentos solicitados anteriormente.</p>
+            <div class="todo-block">
+                📋 Tabla de solicitudes — columnas: Documento | Fecha | Estado | Descarga
+            </div>
+        </div>
+
+    </main>
+</div>

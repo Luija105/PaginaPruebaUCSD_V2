@@ -1,0 +1,37 @@
+@using PaginaPruebaUCSD_V2.Models
+
+<div class="card student-card">
+    <div class="card-header-band" />
+
+    <div class="card-body">
+        <div class="card-avatar-row">
+            <div class="avatar">@Student.Iniciales</div>
+            <span class="status-badge status-@Student.Estatus.ToString().ToLower()">
+                <span class="status-dot" />
+                @Student.Estatus
+            </span>
+        </div>
+
+        <h2 class="student-name">@Student.NombreCompleto</h2>
+        <p class="student-faculty">@Student.Facultad</p>
+
+        <div class="info-grid">
+            <div class="info-row">
+                <span class="info-label">Matrícula</span>
+                <span class="info-value mono">@Student.Matricula</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Año de Ingreso</span>
+                <span class="info-value mono">@Student.AnioIngreso</span>
+            </div>
+            <div class="info-row full">
+                <span class="info-label">Carrera</span>
+                <span class="info-value">@Student.Carrera</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required Student Student { get; set; }
+}

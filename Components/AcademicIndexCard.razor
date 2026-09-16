@@ -1,0 +1,58 @@
+@using PaginaPruebaUCSD_V2.Models
+
+<div class="card">
+    <div class="card-top-row">
+        <div>
+            <h3 class="card-title">Índice Académico</h3>
+            <p class="card-sub">Semestre @Record.SemestreActual</p>
+        </div>
+        <span class="badge-green">Sobresaliente</span>
+    </div>
+
+    <!-- SVG arc gauge -->
+    <div class="gauge-container">
+        <svg width="140" height="120" viewBox="0 0 140 120">
+            <path d="@TrackPath" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round" />
+            <path d="@FillPath"  fill="none" stroke="@GpaColor" stroke-width="10" stroke-linecap="round" />
+            <text x="70" y="62" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a" font-family="'JetBrains Mono', monospace">
+                @Record.IndiceAcademico.ToString("F2")
+            </text>
+            <text x="70" y="80" text-anchor="middle" font-size="10" fill="#94a3b8" font-family="sans-serif">
+                de 4.00
+            </text>
+        </svg>
+    </div>
+
+    <div class="stat-list">
+        <div class="stat-row"><span>Índice Acumulado</span>   <span class="mono">@Record.IndiceAcumulado.ToString("F2")</span></div>
+        <div class="stat-row"><span>Materias Cursadas</span>  <span class="mono">@Record.MateriasCursadas</span></div>
+        <div class="stat-row"><span>Materias Aprobadas</span> <span class="mono">@Record.MateriasAprobadas</span></div>
+        <div class="stat-row"><span>Tasa de Aprobación</span> <span class="mono">@Record.TasaAprobacion%</span></div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required AcademicRecord Record { get; set; }
+
+    private string GpaColor => Record.IndiceAcademico >= 3.5m ? "#16a34a"
+                              : Record.IndiceAcademico >= 2.5m ? "#c9a227" : "#dc2626";
+
+    // Arc geometry helpers
+    private const double Cx = 70, Cy = 70, R = 54;
+    private const double StartAngle = -210, SweepAngle = 240;
+
+    private static (double x, double y) Polar(double angle, double r) =>
+        (Cx + r * Math.Cos(angle * Math.PI / 180),
+         Cy + r * Math.Sin(angle * Math.PI / 180));
+
+    private static string Arc(double start, double sweep)
+    {
+        var (sx, sy) = Polar(start, R);
+        var (ex, ey) = Polar(start + sweep, R);
+        int large = sweep > 180 ? 1 : 0;
+        return $"M {sx:F2} {sy:F2} A {R} {R} 0 {large} 1 {ex:F2} {ey:F2}";
+    }
+
+    private string TrackPath => Arc(StartAngle, SweepAngle);
+    private string FillPath  => Arc(StartAngle, SweepAngle * (double)(Record.IndiceAcademico / 4m));
+}

@@ -1,0 +1,43 @@
+@using PaginaPruebaUCSD_V2.Models
+@using PaginaPruebaUCSD_V2.Pages
+@using PaginaPruebaUCSD_V2.Components
+
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+@inject NavigationManager Navigation
+
+@if (AuthService.CurrentStudent is null)
+{
+    <Login OnSuccess="HandleLogin" />
+}
+else
+{
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="routeData" />
+        </Found>
+        <NotFound>
+            <p>Page not found.</p>
+        </NotFound>
+    </Router>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        AuthService.OnAuthStateChanged += StateHasChanged;
+        await AuthService.RestoreSessionAsync();
+    }
+
+    private void HandleLogin(Student student)
+    {
+        // after successful login, navigate to dashboard (or keep current route)
+        Navigation.NavigateTo("/dashboard");
+        StateHasChanged();
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/");
+    }
+}

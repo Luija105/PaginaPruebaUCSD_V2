@@ -1,0 +1,28 @@
+@page "/correo"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-servicios">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Correo Institucional</h1>
+            <p>Accede, configura y resuelve problemas con tu cuenta institucional.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Acceder al correo</h3>
+                <p>Enlace: <a href="https://mail.ucsd.edu.do" target="_blank">mail.ucsd.edu.do</a></p>
+            </div>
+
+            <div class="card">
+                <h3>Recuperación de contraseña</h3>
+                <p>Usa el enlace de recuperación o contacta a soporte.</p>
+            </div>
+        </div>
+    </main>
+</div>

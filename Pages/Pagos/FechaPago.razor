@@ -1,0 +1,28 @@
+@page "/fechapago"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-pagos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Fechas de Pago</h1>
+            <p>Calendario y fechas límite para pagos académicos.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Próxima fecha</h3>
+                <p>Pago de pensión: <strong>15 de septiembre</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>Historial de pagos</h3>
+                <p>Revisa pagos realizados y recibos descargables.</p>
+            </div>
+        </div>
+    </main>
+</div>

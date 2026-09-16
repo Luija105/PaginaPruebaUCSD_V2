@@ -1,0 +1,28 @@
+@page "/salud"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-procesos">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Adición de Asignaturas</h1>
+            <p>Información sobre cómo adicionar materias y fechas límites.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Instrucciones</h3>
+                <p>Revisa los requisitos y solicita la adición con tu consejero.</p>
+            </div>
+
+            <div class="card">
+                <h3>Lista de asignaturas</h3>
+                <p>Selecciona las materias que deseas adicionar en el formulario.</p>
+            </div>
+        </div>
+    </main>
+</div>

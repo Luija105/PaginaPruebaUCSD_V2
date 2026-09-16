@@ -1,0 +1,31 @@
+@page "/manualinscripcionanteproyecto"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-manuales">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Manual de Inscripción - Tema Anteproyecto</h1>
+            <p>Pasos y requisitos para inscribir el tema de tu anteproyecto.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Documentos necesarios</h3>
+                <ul>
+                    <li>Resumen del proyecto</li>
+                    <li>Hoja de datos del estudiante</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Calendario</h3>
+                <p>Fechas de presentación y revisiones.</p>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,28 @@
+@page "/inscripciontemaanteproyecto"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-trabajo">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Inscripción de Tema de Anteproyecto</h1>
+            <p>Formulario y pasos para la inscripción del tema de anteproyecto.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Nuevo tema</h3>
+                <p>Rellena el resumen y elige un tutor disponible.</p>
+            </div>
+
+            <div class="card">
+                <h3>Estado</h3>
+                <p>Verifica si tu propuesta fue aceptada y asignada a un evaluador.</p>
+            </div>
+        </div>
+    </main>
+</div>

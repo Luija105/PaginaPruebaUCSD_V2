@@ -1,0 +1,31 @@
+@page "/instructivoposgrado"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-manuales">
+    <NavBar StudentName="@studentName" />
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Instructivo de Posgrado</h1>
+            <p>Requisitos, fechas y procedimientos para programas de posgrado.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Requisitos</h3>
+                <ul>
+                    <li>Título de grado</li>
+                    <li>Promedio mínimo</li>
+                    <li>Entrevista</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Fechas importantes</h3>
+                <p>Inscripciones: 1-15 de agosto</p>
+            </div>
+        </div>
+    </main>
+</div>

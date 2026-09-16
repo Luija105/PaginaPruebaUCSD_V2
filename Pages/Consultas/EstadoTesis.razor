@@ -1,0 +1,33 @@
+@page "/EstadoTesis"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-consultas">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Estado de Tesis</h1>
+            <p>Sigue el progreso de tu trabajo de grado y revisa los hitos completados.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Estatus actual</h3>
+                <p>Supervisor: Dra. María Pérez</p>
+                <p>Fase: Revisión del anteproyecto</p>
+            </div>
+
+            <div class="card">
+                <h3>Próximos pasos</h3>
+                <ul>
+                    <li>Entrega de capítulo 1</li>
+                    <li>Revisión metodológica</li>
+                    <li>Defensa preliminar</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>

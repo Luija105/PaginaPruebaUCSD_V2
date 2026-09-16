@@ -1,0 +1,31 @@
+@page "/manualoperativovirtualidad"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-manuales">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Manual Operativo de Virtualidad</h1>
+            <p>Instrucciones para uso de Moodle, Zoom y otras plataformas.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Acceso a Moodle</h3>
+                <p>Visita <a href="https://virtual.ucsd.edu.do" target="_blank">virtual.ucsd.edu.do</a> e inicia sesión con tus credenciales.</p>
+            </div>
+
+            <div class="card">
+                <h3>Guías rápidas</h3>
+                <ul>
+                    <li>Cómo subir tareas</li>
+                    <li>Cómo participar en foros</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>

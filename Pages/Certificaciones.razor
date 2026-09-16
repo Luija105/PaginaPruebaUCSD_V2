@@ -1,0 +1,28 @@
+@page "/certificaciones"
+@using PaginaPruebaUCSD_V2.Components
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+
+<div class="dashboard-shell page-servicios">
+    <NavBar StudentName="@studentName" />
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>Certificaciones</h1>
+            <p>Solicita y descarga certificaciones académicas oficiales.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>Solicitar certificación</h3>
+                <p>Tiempo estimado: 3 días hábiles.</p>
+            </div>
+
+            <div class="card">
+                <h3>Historial</h3>
+                <p>Consulta certificaciones emitidas anteriormente.</p>
+            </div>
+        </div>
+    </main>
+</div>
