@@ -2,7 +2,9 @@
 @using PaginaPruebaUCSD_V2.Components
 @inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
 
-@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+@{
+    var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante";
+}
 
 <div class="dashboard-shell page-servicios">
     <NavBar StudentName="@studentName" />
@@ -14,14 +16,18 @@
         </div>
 
         <div class="card-grid">
-            <div class="card">
-                <h3>Solicitar certificación</h3>
-                <p>Tiempo estimado: 3 días hábiles.</p>
+            <div class="info-card">
+                <div class="info-card-icon">📄</div>
+                <div class="info-card-title">Solicitar certificación</div>
+                <p class="info-card-body">Tiempo estimado: 3 días hábiles.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline solid">Solicitar</a></div>
             </div>
 
-            <div class="card">
-                <h3>Historial</h3>
-                <p>Consulta certificaciones emitidas anteriormente.</p>
+            <div class="info-card">
+                <div class="info-card-icon">🗂️</div>
+                <div class="info-card-title">Historial</div>
+                <p class="info-card-body">Consulta certificaciones emitidas anteriormente.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline">Ver historial</a></div>
             </div>
         </div>
     </main>

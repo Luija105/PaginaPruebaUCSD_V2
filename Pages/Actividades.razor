@@ -2,7 +2,9 @@
 @using PaginaPruebaUCSD_V2.Components
 @inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
 
-@{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
+@{
+    var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante";
+}
 
 <div class="dashboard-shell page-procesos">
     <NavBar StudentName="@studentName" />
@@ -14,14 +16,18 @@
         </div>
 
         <div class="card-grid">
-            <div class="card">
-                <h3>Encuestas</h3>
-                <p>Participa en las encuestas de evaluación docente.</p>
+            <div class="info-card">
+                <div class="info-card-icon">📝</div>
+                <div class="info-card-title">Encuestas</div>
+                <p class="info-card-body">Participa en las encuestas de evaluación docente.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline solid">Responder encuesta</a></div>
             </div>
 
-            <div class="card">
-                <h3>Calendario evaluaciones</h3>
-                <p>Fechas y horarios de exámenes parciales y finales.</p>
+            <div class="info-card">
+                <div class="info-card-icon">📅</div>
+                <div class="info-card-title">Calendario evaluaciones</div>
+                <p class="info-card-body">Fechas y horarios de exámenes parciales y finales.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline">Ver calendario</a></div>
             </div>
         </div>
     </main>

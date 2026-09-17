@@ -56,7 +56,7 @@ public class MockStudentService : IStudentService
             IndiceAcumulado   = 3.65m,
             CreditosAprobados = 98,
             CreditosTotales   = 160,
-            SemestreActual    = 7,
+            CuatrimestreActual    = 7,
             MateriasCursadas  = 42,
             MateriasAprobadas = 39,
         };

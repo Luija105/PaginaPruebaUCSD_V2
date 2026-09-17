@@ -1,28 +1,32 @@
-@page "/solicituddocumentos"
+@page "/SolicitudDocumentos"
 @using PaginaPruebaUCSD_V2.Components
 @inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
 
 @{ var studentName = AuthService.CurrentStudent?.Nombre ?? "Estudiante"; }
 
-<div class="dashboard-shell page-solicitudes">
+<div class="dashboard-shell page-servicios">
     <NavBar StudentName="@studentName" />
 
     <main class="dashboard-main">
         <div class="page-header">
-            <h1>Solicitud de Documentos</h1>
-            <p>Formularios y requisitos para solicitar certificados y otros documentos.</p>
+            <h1>Soporte Técnico</h1>
+            <p>Contacta al equipo de soporte para problemas con la plataforma.</p>
         </div>
 
         <div class="card-grid">
-            <div class="card">
-                <h3>Nuevo trámite</h3>
-                <p>Rellena el formulario y adjunta los documentos necesarios.</p>
+            <div class="info-card">
+                <div class="info-card-icon">💬</div>
+                <div class="info-card-title">Chat de soporte</div>
+                <p class="info-card-body">Disponible de lunes a viernes, 8:00 - 17:00.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline solid">Abrir chat</a></div>
             </div>
 
-            <div class="card">
-                <h3>Estado de solicitudes</h3>
-                <p>Consulta el estado de tus solicitudes previas.</p>
+            <div class="info-card">
+                <div class="info-card-icon">📚</div>
+                <div class="info-card-title">Guías</div>
+                <p class="info-card-body">Tutoriales para acceso, subida de tareas y configuración de cuentas.</p>
+                <div class="info-card-actions"><a href="#" class="btn-inline">Ver guías</a></div>
             </div>
         </div>
     </main>
-</div>
+</div>  

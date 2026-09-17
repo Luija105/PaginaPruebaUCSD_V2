@@ -27,7 +27,7 @@ public class AcademicRecord
     public decimal IndiceAcumulado { get; set; }
     public int CreditosAprobados { get; set; }
     public int CreditosTotales { get; set; }
-    public int SemestreActual { get; set; }
+    public int CuatrimestreActual { get; set; }
     public int MateriasCursadas { get; set; }
     public int MateriasAprobadas { get; set; }
     public int CreditosRestantes => CreditosTotales - CreditosAprobados;

@@ -5,9 +5,13 @@
 @inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
 @inject NavigationManager Navigation
 
-@if (AuthService.CurrentStudent is null)
+@if (!_initialized)
 {
-    <Login OnSuccess="HandleLogin" />
+    <p>Loading...</p>
+}
+else if (AuthService.CurrentStudent is null)
+{
+    <LoginComponent OnSuccess="HandleLogin" />
 }
 else
 {
@@ -22,10 +26,13 @@ else
 }
 
 @code {
+    private bool _initialized = false;
+
     protected override async Task OnInitializedAsync()
     {
         AuthService.OnAuthStateChanged += StateHasChanged;
         await AuthService.RestoreSessionAsync();
+        _initialized = true;
     }
 
     private void HandleLogin(Student student)
