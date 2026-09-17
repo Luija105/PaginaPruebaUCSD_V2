@@ -23,32 +23,59 @@
                 <div class="skeleton-card" />
             </div>
         }
-        else if (_record is not null)
+        else
         {
+            if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Error cargando datos</h3>
+                        <p class="alert-error">@_errorMessage</p>
+                    </div>
+                </div>
+            }
+
             <div class="card-grid">
-                <StudentInfoCard Student="CurrentStudent" />
-                <AcademicIndexCard Record="_record" />
-                <CreditsChart Record="_record" History="_history" />
+                @if (CurrentStudent is not null)
+                {
+                    <StudentInfoCard Student="CurrentStudent" />
+                }
+
+                @if (_record is not null)
+                {
+                    <AcademicIndexCard Record="_record" />
+                    <CreditsChart Record="_record" History="_history" />
+                }
+                else
+                {
+                    <div class="card">
+                        <h3>Sin registro académico</h3>
+                        <p>No se encontró información académica para este estudiante.</p>
+                    </div>
+                }
             </div>
 
-            <div class="stats-strip">
-                <div class="stat-tile">
-                    <span class="stat-label">Cuatrimestre actual</span>
-                    <span class="stat-value navy">@_record.SemestreActual°</span>
+            @if (_record is not null)
+            {
+                <div class="stats-strip">
+                    <div class="stat-tile">
+                        <span class="stat-label">Cuatrimestre actual</span>
+                        <span class="stat-value navy">@_record.CuatrimestreActual°</span>
+                    </div>
+                    <div class="stat-tile">
+                        <span class="stat-label">Índice cuatrimestral</span>
+                        <span class="stat-value green">@_record.IndiceAcademico.ToString("F2")</span>
+                    </div>
+                    <div class="stat-tile">
+                        <span class="stat-label">Créditos aprobados</span>
+                        <span class="stat-value navy">@_record.CreditosAprobados</span>
+                    </div>
+                    <div class="stat-tile">
+                        <span class="stat-label">Créditos restantes</span>
+                        <span class="stat-value amber">@_record.CreditosRestantes</span>
+                    </div>
                 </div>
-                <div class="stat-tile">
-                    <span class="stat-label">Índice semestral</span>
-                    <span class="stat-value green">@_record.IndiceAcademico.ToString("F2")</span>
-                </div>
-                <div class="stat-tile">
-                    <span class="stat-label">Créditos aprobados</span>
-                    <span class="stat-value navy">@_record.CreditosAprobados</span>
-                </div>
-                <div class="stat-tile">
-                    <span class="stat-label">Créditos restantes</span>
-                    <span class="stat-value amber">@_record.CreditosRestantes</span>
-                </div>
-            </div>
+            }
         }
     </main>
 </div>
@@ -57,6 +84,7 @@
     private AcademicRecord? _record;
     private List<CreditPeriod> _history = [];
     private bool _loading = true;
+    private string? _errorMessage;
 
     private Student? CurrentStudent => AuthService.CurrentStudent;
 
@@ -76,9 +104,19 @@
 
         var recordTask  = StudentService.GetAcademicRecordAsync(CurrentStudent.Id);
         var historyTask = StudentService.GetCreditHistoryAsync(CurrentStudent.Id);
-        await Task.WhenAll(recordTask, historyTask);
-        _record  = recordTask.Result;
-        _history = historyTask.Result;
-        _loading = false;
+        try
+        {
+            await Task.WhenAll(recordTask, historyTask);
+            _record  = recordTask.Result;
+            _history = historyTask.Result;
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
 }

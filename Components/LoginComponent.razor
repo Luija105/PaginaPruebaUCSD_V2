@@ -1,0 +1,109 @@
+@using PaginaPruebaUCSD_V2.Models
+@using PaginaPruebaUCSD_V2.Services
+@inject IStudentService StudentService
+@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+
+<div class="login-shell">
+    <!-- Left branding panel -->
+    <div class="login-brand">
+       <div class="brand-logo">
+    <div class="logo-image-container">
+        <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="logoUCSD" width="100">
+    </div>
+    <span class="logo-name">Universidad Catolica de Santo Domingo</span>
+</div>
+
+
+        <div class="brand-body">
+            <h1 class="brand-title">Portal de Servicios<br />Estudiantiles</h1>
+            <p class="brand-sub">Accede a tu historial académico, gestiona tu matrícula,
+                consulta tus finanzas y más, todo en un solo lugar.</p>
+
+            <ul class="feature-list">
+                @foreach (var feat in _features)
+                {
+                    <li><span class="feat-check">✓</span> @feat</li>
+                }
+            </ul>
+        </div>
+
+        <p class="brand-footer">© @DateTime.Now.Year Universidad Catolica de Santo Domingo. Todos los derechos reservados.</p>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="login-form-panel">
+        <div class="login-card">
+            <h2 class="form-title">Iniciar Sesión</h2>
+            <p class="form-sub">Ingresa tu matrícula y contraseña para acceder</p>
+
+            <EditForm Model="_creds" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="field">
+                    <label>Matrícula</label>
+                    <InputText @bind-Value="_creds.Matricula" placeholder="Ej. 20210423" class="input mono" />
+                </div>
+
+                <div class="field">
+                    <label>Contraseña</label>
+                    <InputText type="password" @bind-Value="_creds.Password" placeholder="•••••••••••" class="input" />
+                </div>
+
+                @if (_error is not null)
+                {
+                    <div class="alert-error">@_error</div>
+                }
+
+                <button type="submit" class="btn-primary" disabled="@_loading">
+                    @(_loading ? "Verificando..." : "Entrar al Portal")
+                </button>
+            </EditForm>
+
+            <div class="demo-hint">
+                Demo: matrícula <code>1234</code> / contraseña <code>1234</code>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<Student> OnSuccess { get; set; }
+
+    private readonly AuthCredentials _creds = new();
+    private bool   _loading;
+    private string? _error;
+
+    private readonly string[] _features =
+    [
+        "Historial y notas académicas",
+        "Matrícula y carga académica",
+        "Estado de cuenta y pagos",
+        "Certificaciones y servicios",
+    ];
+
+    private async Task HandleSubmit()
+    {
+        _loading = true;
+        _error   = null;
+        try
+        {
+            var student = await StudentService.LoginAsync(_creds.Matricula, _creds.Password);
+            if (student is not null)
+            {
+                // keep session for 10 minutes in sessionStorage while the tab is open
+                await AuthService.SetSessionAsync(student, TimeSpan.FromMinutes(10));
+                await OnSuccess.InvokeAsync(student);
+            }
+            else
+                _error = "Matrícula o contraseña incorrecta. Verifica tus credenciales.";
+        }
+        catch
+        {
+            _error = "Error de conexión. Intenta de nuevo.";
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

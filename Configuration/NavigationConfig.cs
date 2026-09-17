@@ -1,4 +1,4 @@
-namespace BlazorStudentPortal.Configuration;
+namespace PaginaPruebaUCSD_V2.Configuration;
 
 // ── Navigation menu configuration ─────────────────────────────────────────────
 // Add, remove, or reorder NavSection entries to modify the top navigation.
@@ -15,16 +15,18 @@ public static class NavigationConfig
         [
             new("Aula virtual Grado",        "https://virtual.ucsd.edu.do/login/index.php"),
             new("Aula virtual Postgrado",          "https://ed.ucsd.edu.do/postgrado/login/index.php?loginredirect=1"),
- 
+
         ]),
-        new("consultas", "Consultas",
+
+        new ("consultas", "Consultas",
         [
-            new("Academicas",      "/consultasacademicas"),
-            new("Economicas",    "/consultaseconomicas"),
-            new("Estado de Tesis", "/EstadoTesis"),
-            new("Reglamento de Calificaciones","/ReglasCalificaciones"),
-            new("Retiros", "#retiros"),
+            new ("Academicas",      "/consultasacademicas"),
+            new ("Economicas",    "/consultaseconomicas"),
+            new ("Estado de Tesis", "/EstadoTesis"),
+            new ("Reglamento de Calificaciones","/ReglasCalificaciones"),
         ]),
+
+
         new("manuales y documentos", "Manuales y Documentos",
         [
             new("Instructivo de Posgrado",  "/instructivoposgrado"),
@@ -51,6 +53,7 @@ public static class NavigationConfig
         [
             new("Solicitud de Documentos",          "/solicituddocumentos"),
         ]),
+
             new("trabajo de grado", "Trabajo de Grado",
         [
             new("Consulta de Estatus de Solicitud",   "/consultaestatussolicitud"),
