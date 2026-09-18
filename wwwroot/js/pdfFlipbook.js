@@ -1,8 +1,7 @@
-﻿window.renderPdfAsFlipbook = async function(pdfUrl, canvasContainerId) {
+﻿window.renderPdfAsFlipbook = async function (pdfUrl, canvasContainerId) {
     const container = document.getElementById(canvasContainerId);
     if (!container) return;
 
-    // Estructura interna con la barra de herramientas integrada
     container.innerHTML = `
         <div class="flipbook-toolbar">
             <button id="btn-fullscreen_${canvasContainerId}" class="btn-tool" title="Pantalla completa">
@@ -21,7 +20,6 @@
     const bookElement = document.getElementById(`book_${canvasContainerId}`);
     const btnFullscreen = document.getElementById(`btn-fullscreen_${canvasContainerId}`);
 
-    // Manejo de Pantalla Completa
     btnFullscreen.addEventListener('click', () => {
         if (!document.fullscreenElement) {
             wrapperElement.requestFullscreen().catch(err => {
@@ -31,9 +29,6 @@
             document.exitFullscreen();
         }
     });
-
-    // Configurar el worker de PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
     try {
         const loadingTask = pdfjsLib.getDocument(pdfUrl);
@@ -56,7 +51,6 @@
             bookElement.appendChild(pageDiv);
         }
 
-        // Inicializar StPageFlip
         const pageFlip = new St.PageFlip(bookElement, {
             width: 550,
             height: 733,
