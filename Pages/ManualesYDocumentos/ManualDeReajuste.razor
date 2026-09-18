@@ -14,18 +14,15 @@
         </div>
 
         <div class="card-grid">
-            <div class="info-card">
-                <div class="info-card-icon">🔧</div>
-                <div class="info-card-title">Cómo hacer el reajuste</div>
-                <p class="info-card-body">Guía detallada del procedimiento de reajuste.</p>
-                <div class="info-card-actions"><a href="#" class="btn-inline solid">Abrir manual</a></div>
-            </div>
+            <!-- Tarjeta extendida para ocupar todo el ancho del grid y albergar el lector -->
+            <div class="info-card" style="grid-column: 1 / -1; width: 100%;">
+                <div class="info-card-icon">📘</div>
+                <p class="info-card-body">Haz clic o arrastra las esquinas de las páginas para pasar de hoja.</p>
 
-            <div class="info-card">
-                <div class="info-card-icon">📅</div>
-                <div class="info-card-title">Fechas de reajuste</div>
-                <p class="info-card-body">Consulta el calendario del proceso.</p>
-                <div class="info-card-actions"><a href="#" class="btn-inline">Ver fechas</a></div>
+                <!-- Contenedor del lector adaptado al grid -->
+                <div class="mt-4" style="width: 100%; display: flex; justify-content: center; overflow: auto;">
+                    <PdfFlipbook PdfUrl="sample-data\MANUAL_REAJUSTE.pdf" />
+                </div>
             </div>
         </div>
     </main>

@@ -71,7 +71,7 @@
 }
 
 .page-procesos .card {
-    border-left: 4px solid var(--amber);
+    border-left: 4px solid var(--amber); /*linear-gradient(180deg,#00CA72 0%,#037F4C 35%);*/
 }
 
 .page-solicitudes .page-header h1 {
@@ -121,7 +121,7 @@ html, body {
     justify-content: space-between;
     padding: 3rem;
     width: 45%;
-    background: linear-gradient(160deg, var(--navy-950) 0%, var(--navy-800) 100%);
+    background: linear-gradient(180deg,#00CA72 0%,#037F4C 35%);
     color: #fff;
 }
 
@@ -152,8 +152,8 @@ html, body {
 }
 
 .logo-name {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 5 rem;
+    font-weight: 700;
 }
 
 .brand-title {
@@ -318,7 +318,7 @@ html, body {
 
 /* ── Navbar ─────────────────────────────────────────────────────────────────── */
 .navbar {
-    background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-800) 100%);
+    background: linear-gradient(135deg, #00CA72 0%,#037F4C 30%);
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     position: sticky;
     top: 0;
@@ -576,7 +576,7 @@ html, body {
 /* StudentInfoCard */
 .card-header-band {
     height: 4rem;
-    background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-800) 100%);
+    background: linear-gradient(75deg, #00CA72 0%,#037F4C 40%,#00CA72 90%);
 }
 
 .card-body {
@@ -788,17 +788,23 @@ html, body {
 
 .chart-body {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column; /* Cambia a columna para apilar o alinear de forma central */
+    align-items: center; /* Centra los elementos horizontalmente */
+    justify-content: center;
+    gap: 1rem; /* Espacio entre el gráfico y la barra */
     padding: 0 1rem 1.25rem;
+    text-align: center;
 }
 
 .radial-wrap {
     flex-shrink: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .bar-chart-wrap {
-    flex: 1;
+    width: 100%; /* Ocupa todo el ancho disponible para centrar su contenido internamente */
+    max-width: 300px; /* Opcional: limita el ancho máximo para que se vea ordenado */
     min-width: 0;
 }
 
@@ -807,6 +813,7 @@ html, body {
     font-weight: 600;
     color: var(--slate-500);
     margin-bottom: 0.5rem;
+    text-align: center; /* Asegura que el título del gráfico también esté centrado */
 }
 
 /* ── Info cards (content pages) ──────────────────────────────────── */
@@ -987,3 +994,47 @@ html, body {
     .stat-value.amber {
         color: var(--amber);
     }
+
+
+/* ── Estilos para la barra de herramientas del Flipbook ────────────────── */
+.flipbook-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--slate-200);
+}
+
+    .flipbook-toolbar .btn-tool {
+        padding: 0.375rem 0.875rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        font-family: var(--font);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        border: 1px solid var(--slate-300);
+        background: #fff;
+        color: var(--slate-700);
+        transition: all 0.15s ease;
+    }
+
+        .flipbook-toolbar .btn-tool:hover {
+            background: var(--slate-100);
+            color: var(--navy-800);
+            border-color: var(--navy-800);
+        }
+
+        .flipbook-toolbar .btn-tool.primary {
+            background: var(--navy-800);
+            color: #fff;
+            border-color: var(--navy-800);
+        }
+
+            .flipbook-toolbar .btn-tool.primary:hover {
+                background: var(--navy-950);
+            }

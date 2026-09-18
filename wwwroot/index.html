@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portal Estudiantil — Universidad Catolica de Santo Domingo</title>
+    <title>Portal Estudiantil - Universidad Catolica de Santo Domingo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,6 +13,14 @@
 </head>
 <body>
     <div id="app">Cargando...</div>
+
+    <!-- Librerías para el visor PDF tipo Flipbook -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
+    <!-- Tu script personalizado (asegúrate de crearlo en wwwroot/js/pdfFlipbook.js) -->
+    <script src="js/pdfFlipbook.js"></script>
+
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

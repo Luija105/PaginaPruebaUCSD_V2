@@ -1,0 +1,26 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="flipbook-container" style="display: flex; justify-content: center; align-items: center; width: 100%; min-height: 75vh; overflow: hidden;">
+    <div id="@ContainerId">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando documento...</span>
+        </div>
+        <p class="mt-2">Preparando libro interactivo...</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string PdfUrl { get; set; } = "";
+
+    [Parameter]
+    public string ContainerId { get; set; } = "pdf-flipbook-container";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(PdfUrl))
+        {
+            await JSRuntime.InvokeVoidAsync("renderPdfAsFlipbook", PdfUrl, ContainerId);
+        }
+    }
+}
