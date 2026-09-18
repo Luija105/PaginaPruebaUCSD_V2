@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PaginaPruebaUCSD_V2</title>
-    <base href="/" />
+    <base href="/PaginaPruebaUCSD_V2/" />
 
     <!-- Script seguro de redirección para GitHub Pages SPA -->
     <script type="text/javascript">
@@ -40,6 +40,23 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    <!-- Script para procesar la redirección de GitHub Pages SPA -->
+    <script type="text/javascript">
+            (function () {
+                var segs = window.location.search.slice(1).split('&');
+                for (var i = 0; i < segs.length; i++) {
+                    var kv = segs[i].split('=');
+                    if (kv[0] === '/' && kv[1]) {
+                        var decoded = decodeURIComponent(kv[1]).replace(/~and~/g, '&');
+                        window.history.replaceState(null, null,
+                            window.location.pathname.slice(0, -1) + decoded + window.location.hash
+                        );
+                        break;
+                    }
+                }
+            })();
+    </script>
 
     <!-- Script principal de Blazor WebAssembly -->
     <script src="_framework/blazor.webassembly.js"></script>
