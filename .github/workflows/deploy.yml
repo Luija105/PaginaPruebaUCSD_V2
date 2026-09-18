@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ master ] # Cambia a 'main' si tu rama principal se llama así
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # Ajusta tu versión de .NET si usas otra
+
+      - name: Publicar aplicación en modo Release
+        run: dotnet publish -c Release -o release
+
+      - name: Ajustar base href para GitHub Pages y añadir .nojekyll
+        run: |
+          sed -i 's|<base href="/" />|<base href="/PaginaPruebaUCSD_V2/" />|g' release/wwwroot/index.html
+          touch release/wwwroot/.nojekyll
+
+      - name: Desplegar a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./release/wwwroot
