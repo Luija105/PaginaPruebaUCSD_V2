@@ -9,6 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css" />
     <base href="/"/>
+
+<!-- Script automático para configurar el base href en GitHub Pages -->
+    <script>
+        if (window.location.hostname.includes("github.io")) {
+            // Extrae el nombre del repositorio de la ruta (ej: /PaginaPruebaUCSD_V2/)
+            var pathSegments = window.location.pathname.split('/');
+            if (pathSegments.length > 1 && pathSegments[1] !== "") {
+                document.querySelector('base').href = '/' + pathSegments[1] + '/';
+            }
+        }
+    </script>
+
 </head>
 <script type="text/javascript">
         // Manejo de redirección para GitHub Pages SPA
