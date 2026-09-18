@@ -3,38 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portal Estudiantil — Universidad Catolica de Santo Domingo</title>
+    <title>Portal Estudiantil — Universidad Católica de Santo Domingo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css" />
-    <base href="/"/>
+    <base href="/" />
 
-<!-- Script automático para configurar el base href en GitHub Pages -->
+    <!-- Script automático para configurar el base href en GitHub Pages -->
     <script>
         if (window.location.hostname.includes("github.io")) {
-            // Extrae el nombre del repositorio de la ruta (ej: /PaginaPruebaUCSD_V2/)
             var pathSegments = window.location.pathname.split('/');
             if (pathSegments.length > 1 && pathSegments[1] !== "") {
                 document.querySelector('base').href = '/' + pathSegments[1] + '/';
             }
         }
     </script>
-
 </head>
-<script type="text/javascript">
-        // Manejo de redirección para GitHub Pages SPA
-        (function(l) {
-            if (l.search[1] === '/' ) {
-                var decoded = l.search.slice(1).split('&').map(function(s) {
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
-            }
-        }(window))
-</script>
 <body>
     <div id="app">Cargando...</div>
     <script src="_framework/blazor.webassembly.js"></script>

@@ -1,10 +1,28 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirigiendo...</title>
+    
+    <!-- Script de redirección para GitHub Pages SPA -->
+    <script type="text/javascript">
+        var pathSegmentsToKeep = 1; // Ajustado para el repositorio /PaginaPruebaUCSD_V2/
+
+        var l = window.location;
+        var l_pathname = l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/');
+        var l_rest = l.pathname.split('/').slice(1 + pathSegmentsToKeep).join('/');
+        var l_search = l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '';
+        
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l_pathname + '/?/' + l_rest + l_search + l.hash
+        );
+    </script>
 </head>
 <body>
-
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+        <p>Redirigiendo al portal...</p>
+    </div>
 </body>
 </html>
