@@ -4,6 +4,9 @@ on:
   push:
     branches: [ master ] # Cambia a 'main' si tu rama principal se llama así
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,10 +17,10 @@ jobs:
       - name: Configurar .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x' # Ajusta tu versión de .NET si usas otra
+          dotnet-version: '8.0.x'
 
       - name: Publicar aplicación en modo Release
-        run: dotnet publish -c Release -o release
+        run: dotnet publish PaginaPruebaUCSD_V2.csproj -c Release -o release
 
       - name: Ajustar base href para GitHub Pages y añadir .nojekyll
         run: |
