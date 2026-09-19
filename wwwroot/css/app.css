@@ -99,10 +99,11 @@
 
 
 html, body {
-    height: 100%;
+    min-height: 100%; /* CAMBIADO: height por min-height */
     font-family: var(--font);
     background: var(--slate-100);
     color: var(--slate-900);
+    overflow-x: hidden; /* NUEVO: Evita el scroll horizontal en móviles */
 }
 
 .mono {
@@ -511,11 +512,16 @@ html, body {
     min-height: 100vh;
     background: var(--slate-100);
 }
-
 .dashboard-main {
     max-width: 80rem;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 1.25rem 1rem; /* CAMBIADO: Padding más pequeño primero (Móvil) */
+}
+
+@media (min-width: 768px) { /* NUEVO: Media query para desktop */
+    .dashboard-main {
+        padding: 2rem 1.5rem; /* NUEVO: Padding original para pantallas grandes */
+    }
 }
 
 .page-header {
@@ -536,14 +542,15 @@ html, body {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr; /* CAMBIADO: 1 columna por defecto para móvil */
     gap: 1.25rem;
     margin-bottom: 1.25rem;
+    width: 100%; /* NUEVO */
 }
 
-@media (max-width: 900px) {
+@media (min-width: 768px) { /* CAMBIADO: De max-width 900px a min-width 768px */
     .card-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* CAMBIADO: Distribución flexible */
     }
 }
 
@@ -952,14 +959,9 @@ html, body {
 /* Stats strip */
 .stats-strip {
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* CAMBIADO: Se ajusta automáticamente al ancho sin necesidad de media queries */
     gap: 1rem;
-}
-
-@media (max-width: 640px) {
-    .stats-strip {
-        grid-template-columns: repeat(2,1fr);
-    }
+    width: 100%; /* NUEVO */
 }
 
 .stat-tile {
@@ -1049,6 +1051,8 @@ html, body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     padding: 1.5rem;
     margin-bottom: 2rem;
+    max-width: 100%; /* NUEVO: Obliga a la tarjeta a no superar el ancho de la pantalla */
+    overflow: hidden; /* NUEVO: Contiene cualquier desbordamiento */
 }
 
 .schedule-header {
