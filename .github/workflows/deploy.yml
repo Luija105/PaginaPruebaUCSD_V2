@@ -9,7 +9,7 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
+concurrency:https://github.com/Luija105/PaginaPruebaUCSD_V2
   group: "pages"
   cancel-in-progress: true
 

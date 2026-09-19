@@ -28,14 +28,15 @@
         {
             if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <div class="card-grid">
-                    <div class="card">
+                <div class="card-grid" style="margin-bottom: 1.25rem;">
+                    <div class="card" style="padding: 1.25rem;">
                         <h3>Error cargando datos</h3>
                         <p class="alert-error">@_errorMessage</p>
                     </div>
                 </div>
             }
 
+            <!-- Fila Principal: Tarjetas Académicas -->
             <div class="card-grid">
                 @if (CurrentStudent is not null)
                 {
@@ -49,34 +50,45 @@
                 }
                 else
                 {
-                    <div class="card">
+                    <div class="card" style="padding: 1.25rem;">
                         <h3>Sin registro académico</h3>
                         <p>No se encontró información académica para este estudiante.</p>
                     </div>
                 }
             </div>
 
-            @if (_record is not null)
-            {
-                <div class="stats-strip">
-                    <div class="stat-tile">
-                        <span class="stat-label">Cuatrimestre actual</span>
-                        <span class="stat-value navy">@_record.CuatrimestreActual°</span>
+            <!-- Segunda Fila: Resumen Estadístico Arriba y Horario Abajo -->
+            <div class="dashboard-secondary-grid" style="display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.25rem;">
+
+                <!-- 1. Estadísticas Globales (Arriba a todo lo ancho) -->
+                @if (_record is not null)
+                {
+                    <div class="stats-strip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%;">
+                        <div class="stat-tile">
+                            <span class="stat-label">Cuatrimestre actual</span>
+                            <span class="stat-value navy">@_record.CuatrimestreActual°</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-label">Índice cuatrimestral</span>
+                            <span class="stat-value green">@_record.IndiceAcademico.ToString("F2")</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-label">Créditos aprobados</span>
+                            <span class="stat-value navy">@_record.CreditosAprobados</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-label">Créditos restantes</span>
+                            <span class="stat-value amber">@_record.CreditosRestantes</span>
+                        </div>
                     </div>
-                    <div class="stat-tile">
-                        <span class="stat-label">Índice cuatrimestral</span>
-                        <span class="stat-value green">@_record.IndiceAcademico.ToString("F2")</span>
-                    </div>
-                    <div class="stat-tile">
-                        <span class="stat-label">Créditos aprobados</span>
-                        <span class="stat-value navy">@_record.CreditosAprobados</span>
-                    </div>
-                    <div class="stat-tile">
-                        <span class="stat-label">Créditos restantes</span>
-                        <span class="stat-value amber">@_record.CreditosRestantes</span>
-                    </div>
+                }
+
+                <!-- 2. Widget de Horario (Abajo ocupando el ancho completo) -->
+                <div class="grid-col-horario" style="width: 100%;">
+                    <HorarioWidget />
                 </div>
-            }
+
+            </div>
         }
     </main>
 </div>
@@ -103,12 +115,12 @@
             return;
         }
 
-        var recordTask  = StudentService.GetAcademicRecordAsync(CurrentStudent.Id);
+        var recordTask = StudentService.GetAcademicRecordAsync(CurrentStudent.Id);
         var historyTask = StudentService.GetCreditHistoryAsync(CurrentStudent.Id);
         try
         {
             await Task.WhenAll(recordTask, historyTask);
-            _record  = recordTask.Result;
+            _record = recordTask.Result;
             _history = historyTask.Result;
         }
         catch (Exception ex)
@@ -120,4 +132,4 @@
             _loading = false;
         }
     }
-}
+} 

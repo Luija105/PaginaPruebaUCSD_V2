@@ -1,0 +1,91 @@
+﻿@using PaginaPruebaUCSD_V2.Models
+
+<div class="schedule-card-container">
+    <div class="schedule-header">
+        <div>
+            <h3 class="schedule-title">🗓️ Horario Académico</h3>
+            <p class="schedule-subtitle">Asignaturas e intinerario semanal seleccionado</p>
+        </div>
+        <span class="schedule-badge">@Subjects.Count Asignaturas</span>
+    </div>
+
+    <div class="schedule-table-wrapper">
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>CÓD.</th>
+                    <th>CRÉD.</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>SECC.</th>
+                    <th>LUNES</th>
+                    <th>MARTES</th>
+                    <th>MIÉRCOLES</th>
+                    <th>JUEVES</th>
+                    <th>VIERNES</th>
+                    <th>SÁBADO</th>
+                    <th class="text-center">ESTADO</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Subjects == null || !Subjects.Any())
+                {
+                    <tr>
+                        <td colspan="11" class="empty-state">No hay asignaturas registradas.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var sub in Subjects)
+                    {
+                        <tr>
+                            <td><span class="code-pill">@sub.Code</span></td>
+                            <td class="text-center font-medium">@sub.Credits</td>
+                            <td class="subject-name">@sub.Description</td>
+                            <td class="text-center section-cell">@sub.Section</td>
+                            <td>@RenderTimeSlot(sub.Lunes)</td>
+                            <td>@RenderTimeSlot(sub.Martes)</td>
+                            <td>@RenderTimeSlot(sub.Miercoles)</td>
+                            <td>@RenderTimeSlot(sub.Jueves)</td>
+                            <td>@RenderTimeSlot(sub.Viernes)</td>
+                            <td>@RenderTimeSlot(sub.Sabado)</td>
+                            <td class="text-center">
+                                <span class="status-chip @(sub.Status.ToLower() == "abierta" ? "status-open" : "status-closed")">
+                                    @sub.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<HorarioModel> Subjects { get; set; } = new()
+    {
+        new HorarioModel { Code = "BIO500", Credits = 3, Description = "SER HUMANO Y NATURALEZA", Section = "207", Jueves = "19:25/21:40 (VRTUAL)", Status = "ABIERTA" },
+        new HorarioModel { Code = "FIL320", Credits = 3, Description = "METODOLOGIA DE LA INVESTIGACION", Section = "203", Lunes = "19:25/21:50 (VRTUAL)", Status = "ABIERTA" },
+        new HorarioModel { Code = "ISC132", Credits = 3, Description = "LENGUAJE DE PROGRAMACION", Section = "200", Viernes = "17:45/20:10 (EPCLA1)", Status = "ABIERTA" },
+        new HorarioModel { Code = "ISC136", Credits = 4, Description = "BASE DE DATOS I", Section = "200", Martes = "17:45/19:20 (VRTUAL)", Jueves = "16:05/17:45 (VRTUAL)", Status = "ABIERTA" }
+    };
+
+    private RenderFragment RenderTimeSlot(string slot) => __builder =>
+    {
+        if (string.IsNullOrWhiteSpace(slot))
+        {
+            <span class="empty-slot">—</span>
+            ;
+        }
+        else
+        {
+            var isVirtual = slot.Contains("(VRTUAL)");
+            <div class="time-slot-pill @(isVirtual ? "virtual-pill" : "presencial-pill")">
+                <span>@slot.Replace("(VRTUAL)", "").Replace("(EPCLA1)", "").Trim()</span>
+                <small class="slot-type">@(isVirtual ? "VIRTUAL" : "PRESENCIAL")</small>
+            </div>
+;
+        }
+    };
+}

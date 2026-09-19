@@ -1038,3 +1038,172 @@ html, body {
             .flipbook-toolbar .btn-tool.primary:hover {
                 background: var(--navy-950);
             }
+
+/* ── Horario Widget ───────────────────────── */
+
+/* Contenedor Principal */
+.schedule-card-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.schedule-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.schedule-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0.25rem 0 0 0;
+}
+
+.schedule-badge {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid #cbd5e1;
+}
+
+/* Tabla Estilizada */
+.schedule-table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+    .schedule-table thead {
+        background-color: #0284c7; /* Azul institucional moderno */
+        color: #ffffff;
+    }
+
+    .schedule-table th {
+        padding: 0.75rem 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .schedule-table tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+        transition: background-color 0.15s ease;
+    }
+
+        .schedule-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+    .schedule-table td {
+        padding: 0.75rem 0.85rem;
+        color: #334155;
+        vertical-align: middle;
+    }
+
+/* Elementos Internos */
+.code-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: #0284c7;
+    background-color: #e0f2fe;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.subject-name {
+    font-weight: 600;
+    color: #1e293b;
+    min-width: 180px;
+}
+
+.section-cell {
+    font-family: monospace;
+    color: #64748b;
+}
+
+.empty-slot {
+    color: #cbd5e1;
+    text-align: center;
+    display: block;
+}
+
+/* Slots de Horario */
+.time-slot-pill {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    min-width: 120px;
+}
+
+.virtual-pill {
+    background-color: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    color: #1e40af;
+}
+
+.presencial-pill {
+    background-color: #f0fdf4;
+    border-left: 3px solid #22c55e;
+    color: #166534;
+}
+
+.slot-type {
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+/* Status Chip */
+.status-chip {
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.status-open {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.status-closed {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.font-medium {
+    font-weight: 500;
+}
