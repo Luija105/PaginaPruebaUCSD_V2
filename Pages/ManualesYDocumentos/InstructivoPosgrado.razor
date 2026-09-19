@@ -16,18 +16,30 @@
             <p>Guía general para estudiantes de programas de posgrado.</p>
         </div>
 
-        <div class="card-grid">
-            <!-- Tarjeta extendida para ocupar todo el ancho del grid y albergar el lector -->
-            <div class="info-card" style="grid-column: 1 / -1; width: 100%;">
+        <!-- Cabecera informativa separada del visor -->
+        <div class="card-grid" style="margin-bottom:0.75rem;">
+            <div class="info-card" style="grid-column: 1 / -1; flex-direction:row; align-items:center; gap:1rem; padding:1rem 1.25rem;">
                 <div class="info-card-icon">📘</div>
-                <div class="info-card-title">Instructivo general</div>
-                <p class="info-card-body">Haz clic o arrastra las esquinas de las páginas para pasar de hoja.</p>
-
-                <!-- Contenedor del lector adaptado al grid -->
-                <div class="mt-4" style="width: 100%; display: flex; justify-content: center; overflow: auto;">
-                    <PdfFlipbook PdfUrl="sample-data/MANUAL_OPERATIVO_UCSD-POSGRADO.pdf" />
+                <div>
+                    <div class="info-card-title">Instructivo general</div>
+                    <p class="info-card-body" style="margin:0;">Navega con los botones o las flechas del teclado.</p>
                 </div>
             </div>
         </div>
+
+        <!-- Visor en su propio contenedor, sin padding extra -->
+        <div style="
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-left: 4px solid var(--gold);
+            border-radius:1rem;
+            padding:1rem;
+            width:100%;
+            box-sizing:border-box;
+        ">
+            <PdfFlipbook PdfUrl="sample-data/MANUAL_OPERATIVO_UCSD-POSGRADO.pdf"
+                         ContainerId="flipbook-1" />
+        </div>
+
     </main>
 </div>

@@ -1,67 +1,66 @@
-﻿window.renderPdfAsFlipbook = async function (pdfUrl, canvasContainerId) {
-    const container = document.getElementById(canvasContainerId);
-    if (!container) return;
+﻿window.renderPdfAsFlipbook = async function (pdfUrl, containerId) {
 
-    container.innerHTML = `
-        <div class="flipbook-toolbar">
-            <button id="btn-fullscreen_${canvasContainerId}" class="btn-tool" title="Pantalla completa">
-                🖵 Pantalla Completa
-            </button>
-            <a href="${pdfUrl}" download class="btn-tool primary" title="Descargar PDF">
-                📥 Descargar PDF
-            </a>
-        </div>
-        <div id="book-wrapper_${canvasContainerId}" style="display: flex; justify-content: center; align-items: center; width: 100%;">
-            <div id="book_${canvasContainerId}"></div>
-        </div>
-    `;
+    var container = document.getElementById(containerId);
 
-    const wrapperElement = document.getElementById(`book-wrapper_${canvasContainerId}`);
-    const bookElement = document.getElementById(`book_${canvasContainerId}`);
-    const btnFullscreen = document.getElementById(`btn-fullscreen_${canvasContainerId}`);
+    if (!container) {
+        console.error('Contenedor no encontrado: ' + containerId);
+        return;
+    }
 
-    btnFullscreen.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-            wrapperElement.requestFullscreen().catch(err => {
-                console.error(`Error al intentar modo pantalla completa: ${err.message}`);
+    container.innerHTML = '';
+
+    var pdfjsLib = window.pdfjsLib;
+
+    if (!pdfjsLib) {
+        container.innerHTML = '<p style="color:red;padding:1rem;">Error: pdf.js no esta cargado.</p>';
+        return;
+    }
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+
+        var totalPages = pdf.numPages;
+        var viewer = document.createElement('div');
+        viewer.style.overflowY = 'auto';
+        viewer.style.maxHeight = '75vh';
+        viewer.style.width = '100%';
+        viewer.style.display = 'flex';
+        viewer.style.flexDirection = 'column';
+        viewer.style.alignItems = 'center';
+        viewer.style.gap = '8px';
+
+        var pagePromises = [];
+        for (var i = 1; i <= totalPages; i++) {
+            pagePromises.push(pdf.getPage(i));
+        }
+
+        return Promise.all(pagePromises).then(function (pages) {
+            pages.forEach(function (page) {
+                var viewport = page.getViewport({ scale: 1.5 });
+
+                var canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                canvas.style.display = 'block';
+                canvas.style.maxWidth = '100%';
+                canvas.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+
+                var renderContext = {
+                    canvasContext: canvas.getContext('2d'),
+                    viewport: viewport
+                };
+
+                page.render(renderContext);
+                viewer.appendChild(canvas);
             });
-        } else {
-            document.exitFullscreen();
-        }
-    });
 
-    try {
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        const pdf = await loadingTask.promise;
-
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 1.5 });
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            await page.render({ canvasContext: context, viewport: viewport }).promise;
-
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'page';
-            pageDiv.appendChild(canvas);
-            bookElement.appendChild(pageDiv);
-        }
-
-        const pageFlip = new St.PageFlip(bookElement, {
-            width: 550,
-            height: 733,
-            showCover: true,
-            maxShadowOpacity: 0.5,
-            mobileScrollSupport: true
+            container.appendChild(viewer);
         });
 
-        pageFlip.loadFromHTML(bookElement.querySelectorAll('.page'));
-    } catch (error) {
-        console.error("Error al cargar el PDF en el flipbook:", error);
-        container.innerHTML = '<p style="color: var(--red); font-size: 0.875rem; text-align: center; padding: 2rem;">No se pudo cargar el documento interactivo.</p>';
-    }
+    }).catch(function (error) {
+        console.error('Error al cargar el PDF:', error);
+        container.innerHTML = '<p style="color:red;padding:1rem;">Error al cargar el PDF: ' + error.message + '</p>';
+    });
 };

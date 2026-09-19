@@ -1,11 +1,9 @@
 ﻿@inject IJSRuntime JSRuntime
 
-<div class="flipbook-container" style="display: flex; justify-content: center; align-items: center; width: 100%; min-height: 75vh; overflow: hidden;">
-    <div id="@ContainerId" style="width: 100%;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando documento...</span>
-        </div>
-        <p class="mt-2">Preparando libro interactivo...</p>
+<div id="@ContainerId" style="width:100%; box-sizing:border-box; min-height:200px;">
+    <div class="fb-loading">
+        <div class="fb-spinner"></div>
+        <span>Preparando documento...</span>
     </div>
 </div>
 

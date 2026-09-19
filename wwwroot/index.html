@@ -9,16 +9,16 @@
 
     <!-- Script seguro de redirección para GitHub Pages SPA -->
     <script type="text/javascript">
-                (function(l) {
-                    if (l.search && l.search.length > 1 && l.search[1] === '/') {
-                        var decoded = l.search.slice(1).split('&').map(function(s) {
-                            return s.replace(/~and~/g, '&');
-                        }).join('?');
-                        window.history.replaceState(null, null,
-                            l.pathname.slice(0, -1) + decoded + l.hash
-                        );
-                    }
-                }(window));
+                        (function(l) {
+                            if (l.search && l.search.length > 1 && l.search[1] === '/') {
+                                var decoded = l.search.slice(1).split('&').map(function(s) {
+                                    return s.replace(/~and~/g, '&');
+                                }).join('?');
+                                window.history.replaceState(null, null,
+                                    l.pathname.slice(0, -1) + decoded + l.hash
+                                );
+                            }
+                        }(window));
     </script>
 
     <!-- Tus estilos CSS (Bootstrap, personalizados, etc.) -->
@@ -43,23 +43,331 @@
 
     <!-- Script para procesar la redirección de GitHub Pages SPA -->
     <script type="text/javascript">
-            (function () {
-                var segs = window.location.search.slice(1).split('&');
-                for (var i = 0; i < segs.length; i++) {
-                    var kv = segs[i].split('=');
-                    if (kv[0] === '/' && kv[1]) {
-                        var decoded = decodeURIComponent(kv[1]).replace(/~and~/g, '&');
-                        window.history.replaceState(null, null,
-                            window.location.pathname.slice(0, -1) + decoded + window.location.hash
-                        );
-                        break;
-                    }
-                }
-            })();
+                                                            (function () {
+                                                                var segs = window.location.search.slice(1).split('&');
+                                                                for (var i = 0; i < segs.length; i++) {
+                                                                    var kv = segs[i].split('=');
+                                                                    if (kv[0] === '/' && kv[1]) {
+                                                                        var decoded = decodeURIComponent(kv[1]).replace(/~and~/g, '&');
+                                                                        window.history.replaceState(null, null,
+                                                                            window.location.pathname.slice(0, -1) + decoded + window.location.hash
+                                                                        );
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            })();
     </script>
 
-    <!-- Script principal de Blazor WebAssembly -->
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script>
+            window.renderPdfAsFlipbook = function(pdfUrl, containerId) {
+                var c = document.getElementById(containerId);
+                if (!c) return;
+
+                var lib = window.pdfjsLib;
+                if (!lib) { c.innerHTML = '<p style="color:#dc2626">pdf.js no cargado</p>'; return; }
+                lib.GlobalWorkerOptions.workerSrc =
+                    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+                // ── Estilos ──────────────────────────────────────────────────────────
+                if (!document.getElementById('fb-style')) {
+                    var s = document.createElement('style');
+                    s.id = 'fb-style';
+                    s.textContent = `
+                        .fb-wrap {
+                            display: flex; flex-direction: column;
+                            align-items: center; gap: 1rem; width: 100%;
+                            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+                            box-sizing: border-box;
+                        }
+                        .fb-toolbar {
+                            display: flex; align-items: center; gap: 0.5rem;
+                            flex-wrap: wrap; justify-content: center; width: 100%;
+                            background: #fff; border: 1px solid #e2e8f0;
+                            border-radius: 0.75rem; padding: 0.625rem 1rem;
+                            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+                            box-sizing: border-box;
+                        }
+                        .fb-btn {
+                            display: inline-flex; align-items: center; gap: 0.35rem;
+                            padding: 0.4rem 0.875rem; border-radius: 0.5rem;
+                            font-size: 0.8125rem; font-weight: 600;
+                            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+                            cursor: pointer; border: 1.5px solid #e2e8f0;
+                            background: #fff; color: #374151;
+                            transition: all 0.15s ease; white-space: nowrap;
+                            user-select: none;
+                        }
+                        .fb-btn:hover:not(:disabled) { background: #f1f5f9; color: #1a3a6e; border-color: #1a3a6e; }
+                        .fb-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+                        .fb-btn.solid { background: #1a3a6e; color: #fff; border-color: #1a3a6e; }
+                        .fb-btn.solid:hover:not(:disabled) { background: #0a1628; border-color: #0a1628; }
+                        .fb-btn.gold { background: #c9a227; color: #0a1628; border-color: #c9a227; font-weight: 700; }
+                        .fb-btn.gold:hover:not(:disabled) { background: #b8911f; border-color: #b8911f; }
+
+                        .fb-sep { width: 1px; height: 1.25rem; background: #e2e8f0; flex-shrink: 0; }
+
+                        .fb-page-info {
+                            font-size: 0.8125rem; color: #64748b; font-weight: 600;
+                            min-width: 72px; text-align: center;
+                            font-family: 'JetBrains Mono', ui-monospace, monospace;
+                        }
+                        .fb-zoom-wrap { display: flex; align-items: center; gap: 0.4rem; }
+                        .fb-zoom-wrap label { font-size: 0.75rem; color: #94a3b8; font-weight: 600; white-space: nowrap; }
+                        .fb-zoom-wrap input[type=range] { width: 72px; accent-color: #1a3a6e; cursor: pointer; }
+                        .fb-zoom-val {
+                            font-size: 0.75rem; color: #64748b; min-width: 36px;
+                            font-family: 'JetBrains Mono', ui-monospace, monospace;
+                        }
+                        .fb-book-wrap {
+                            width: 100%; display: flex; justify-content: center; align-items: center;
+                            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+                            border-radius: 1rem; padding: 1.5rem;
+                            border: 1px solid #e2e8f0; box-sizing: border-box;
+                            overflow: hidden; min-height: 300px;
+                        }
+                        .fb-viewer {
+                            display: flex; justify-content: center; align-items: flex-start;
+                            gap: 0; position: relative;
+                            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+                        }
+                        .fb-page-canvas {
+                            display: block; flex-shrink: 0;
+                            background: #fff;
+                        }
+                        .fb-page-canvas.left  { box-shadow: inset -3px 0 10px rgba(0,0,0,0.07); }
+                        .fb-page-canvas.right { box-shadow: inset  3px 0 10px rgba(0,0,0,0.07); }
+                        .fb-loading {
+                            display: flex; flex-direction: column; align-items: center;
+                            gap: 0.75rem; padding: 3rem; color: #64748b; font-size: 0.875rem;
+                        }
+                        .fb-spinner {
+                            width: 32px; height: 32px; border: 3px solid #e2e8f0;
+                            border-top-color: #1a3a6e; border-radius: 50%;
+                            animation: fb-spin 0.7s linear infinite;
+                        }
+                        @keyframes fb-spin { to { transform: rotate(360deg); } }
+
+                        @media (max-width: 600px) {
+                            .fb-sep { display: none; }
+                            .fb-toolbar { gap: 0.375rem; padding: 0.5rem 0.625rem; }
+                            .fb-btn { padding: 0.375rem 0.625rem; font-size: 0.75rem; }
+                            .fb-book-wrap { padding: 0.75rem; }
+                        }
+                    `;
+                    document.head.appendChild(s);
+                }
+
+                // ── Estado ───────────────────────────────────────────────────────────
+                var pdfDoc   = null;
+                var pages    = [];      // canvases renderizados a escala base
+                var total    = 0;
+                var current  = 1;       // página izquierda visible (siempre impar en doble)
+                var zoomPct  = 100;
+                var isMobile = false;
+                var resizeTimer = null;
+                var rendering = false;
+
+                // ── Iniciar carga ────────────────────────────────────────────────────
+                c.innerHTML = '<div class="fb-loading"><div class="fb-spinner"></div><span>Preparando documento...</span></div>';
+
+                lib.getDocument(pdfUrl).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    total  = pdf.numPages;
+                    buildShell();
+                    loadAndShow();
+                }).catch(function(e) {
+                    c.innerHTML = err(e.message);
+                });
+
+                // ── Construir estructura HTML (una sola vez) ─────────────────────────
+                function buildShell() {
+                    c.innerHTML = `
+                        <div class="fb-wrap">
+                            <div class="fb-toolbar">
+                                <button class="fb-btn solid" id="fb-prev" disabled>&#9664; Anterior</button>
+                                <span class="fb-page-info" id="fb-info">— / —</span>
+                                <button class="fb-btn solid" id="fb-next">Siguiente &#9654;</button>
+                                <div class="fb-sep"></div>
+                                <div class="fb-zoom-wrap">
+                                    <label>Zoom</label>
+                                    <input type="range" id="fb-zoom" min="50" max="200" value="100" step="10">
+                                    <span class="fb-zoom-val" id="fb-zval">100%</span>
+                                </div>
+                                <div class="fb-sep"></div>
+                                <button class="fb-btn gold" id="fb-dl">&#11015; Descargar</button>
+                            </div>
+                            <div class="fb-book-wrap" id="fb-bwrap">
+                                <div class="fb-loading"><div class="fb-spinner"></div><span>Renderizando páginas...</span></div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Eventos — referencias directas al DOM, sin depender de Turn.js
+                    document.getElementById('fb-prev').addEventListener('click', function() { goTo(current - (isMobile ? 1 : 2)); });
+                    document.getElementById('fb-next').addEventListener('click', function() { goTo(current + (isMobile ? 1 : 2)); });
+
+                    document.getElementById('fb-zoom').addEventListener('input', function() {
+                        if (rendering) return;   // ignorar si ya está procesando
+                        zoomPct = parseInt(this.value);
+                        document.getElementById('fb-zval').textContent = zoomPct + '%';
+                        showCurrentPages();      // solo reescala canvas ya renderizados, sin re-renderizar PDF
+                    });
+
+                    document.getElementById('fb-dl').addEventListener('click', function() {
+                        var a = document.createElement('a');
+                        a.href = pdfUrl;
+                        a.download = pdfUrl.split('/').pop() || 'documento.pdf';
+                        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    });
+
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'ArrowRight') goTo(current + (isMobile ? 1 : 2));
+                        if (e.key === 'ArrowLeft')  goTo(current - (isMobile ? 1 : 2));
+                    });
+
+                    window.addEventListener('resize', function() {
+                        clearTimeout(resizeTimer);
+                        resizeTimer = setTimeout(showCurrentPages, 250);
+                    });
+                }
+
+                // ── Renderizar todas las páginas UNA sola vez a escala base 1.5 ─────
+                function loadAndShow() {
+                    rendering = true;
+                    var jobs = [];
+                    for (var i = 1; i <= total; i++) jobs.push(i);
+
+                    jobs.reduce(function(chain, n) {
+                        return chain.then(function() {
+                            return pdfDoc.getPage(n).then(function(page) {
+                                var vp = page.getViewport({ scale: 1.5 });
+                                var canvas = document.createElement('canvas');
+                                canvas.width  = Math.floor(vp.width);
+                                canvas.height = Math.floor(vp.height);
+                                return page.render({
+                                    canvasContext: canvas.getContext('2d'),
+                                    viewport: vp
+                                }).promise.then(function() {
+                                    pages.push(canvas);
+                                });
+                            });
+                        });
+                    }, Promise.resolve()).then(function() {
+                        rendering = false;
+                        showCurrentPages();
+                    }).catch(function(e) {
+                        c.innerHTML = err(e.message);
+                    });
+                }
+
+                // ── Mostrar páginas actuales (solo CSS transform, sin re-renderizar) ─
+                function showCurrentPages() {
+                    var bwrap = document.getElementById('fb-bwrap');
+                    if (!bwrap || pages.length === 0) return;
+
+                    // Detectar móvil por ancho real del contenedor
+                    var availW = c.offsetWidth - 48;
+                    isMobile = availW < 520;
+
+                    // Calcular tamaño visual con zoom
+                    var baseW = pages[0].width;
+                    var baseH = pages[0].height;
+                    var ratio  = baseH / baseW;
+
+                    var maxW, pgW;
+                    if (isMobile) {
+                        maxW = Math.min(availW, 480);
+                        pgW  = Math.floor(maxW * (zoomPct / 100));
+                    } else {
+                        maxW = Math.min(availW, 960);
+                        pgW  = Math.floor((maxW / 2) * (zoomPct / 100));
+                        // Evitar que se salga del contenedor
+                        if (pgW * 2 > availW) pgW = Math.floor(availW / 2);
+                    }
+                    var pgH = Math.floor(pgW * ratio);
+
+                    // Construir viewer
+                    bwrap.innerHTML = '';
+                    var viewer = document.createElement('div');
+                    viewer.className = 'fb-viewer';
+
+                    if (isMobile) {
+                        // Una sola página
+                        var idx = current - 1;
+                        if (idx < pages.length) {
+                            var cv = document.createElement('canvas');
+                            cv.className = 'fb-page-canvas';
+                            cv.width  = pgW;
+                            cv.height = pgH;
+                            cv.getContext('2d').drawImage(pages[idx], 0, 0, pgW, pgH);
+                            viewer.appendChild(cv);
+                        }
+                    } else {
+                        // Dos páginas: izquierda (current-1) y derecha (current)
+                        var leftIdx  = current - 1;
+                        var rightIdx = current;    // 0-indexed → página current+1
+
+                        if (leftIdx < pages.length) {
+                            var cvL = document.createElement('canvas');
+                            cvL.className = 'fb-page-canvas left';
+                            cvL.width  = pgW; cvL.height = pgH;
+                            cvL.getContext('2d').drawImage(pages[leftIdx], 0, 0, pgW, pgH);
+                            viewer.appendChild(cvL);
+                        }
+                        if (rightIdx < pages.length) {
+                            var cvR = document.createElement('canvas');
+                            cvR.className = 'fb-page-canvas right';
+                            cvR.width  = pgW; cvR.height = pgH;
+                            cvR.getContext('2d').drawImage(pages[rightIdx], 0, 0, pgW, pgH);
+                            viewer.appendChild(cvR);
+                        }
+                    }
+
+                    bwrap.appendChild(viewer);
+                    syncControls();
+                }
+
+                // ── Navegar ──────────────────────────────────────────────────────────
+                function goTo(page) {
+                    // En doble, siempre páginas impares (1, 3, 5...)
+                    if (!isMobile) {
+                        page = page < 1 ? 1 : page;
+                        if (page % 2 === 0) page = page - 1; // ajustar a impar
+                    }
+                    page = Math.max(1, Math.min(page, total));
+                    current = page;
+                    showCurrentPages();
+                }
+
+                // ── Sincronizar controles ────────────────────────────────────────────
+                function syncControls() {
+                    var info = document.getElementById('fb-info');
+                    var prev = document.getElementById('fb-prev');
+                    var next = document.getElementById('fb-next');
+                    if (!info) return;
+
+                    var displayPage = isMobile ? current : current;
+                    var displayEnd  = isMobile ? current : Math.min(current + 1, total);
+
+                    if (isMobile) {
+                        info.textContent = current + ' / ' + total;
+                    } else {
+                        info.textContent = current + '-' + displayEnd + ' / ' + total;
+                    }
+
+                    prev.disabled = (current <= 1);
+                    next.disabled = isMobile ? (current >= total) : (current + 1 >= total);
+                }
+
+                function err(msg) {
+                    return '<div style="padding:1.5rem;background:#fee2e2;color:#991b1b;border-radius:0.75rem;border:1px solid #fecaca;font-size:0.875rem;">Error: ' + msg + '</div>';
+                }
+            };
+    </script>
+
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
-
 </html>

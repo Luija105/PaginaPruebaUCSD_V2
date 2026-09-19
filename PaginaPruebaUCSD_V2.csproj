@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Content Include="Dockerfile" />
-    <Content Include="index.html" />
   </ItemGroup>
 
   <ItemGroup>
