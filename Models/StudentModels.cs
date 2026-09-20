@@ -48,49 +48,58 @@ public class AuthCredentials
 
 // ── Modelos de Consultas Académicas (Agregados para resolver los errores CS0246) ──
 
+// ── Consultas Académicas ──────────────────────────────────────────────────────
+
 public class Asignatura
 {
-    public string Clave { get; set; } = "";
-    public string Nombre { get; set; } = "";
+    public string Codigo { get; set; } = "";
+    public string Descripcion { get; set; } = "";
     public int Creditos { get; set; }
-    public string Aula { get; set; } = "";
-    public string Horario { get; set; } = "";
-    public string Profesor { get; set; } = "";
+    public string Seccion { get; set; } = "";
+    public string Lunes { get; set; } = "";
+    public string Martes { get; set; } = "";
+    public string Miercoles { get; set; } = "";
+    public string Jueves { get; set; } = "";
+    public string Viernes { get; set; } = "";
+    public string Sabado { get; set; } = "";
+    public string Estado { get; set; } = "ABIERTA";
 }
 
 public class Calificacion
 {
-    public string Clave { get; set; } = "";
-    public string Asignatura { get; set; } = "";
+    public string Codigo { get; set; } = "";
+    public string Descripcion { get; set; } = "";
     public int Creditos { get; set; }
-    public decimal NotaAcumulada { get; set; }
-    public string Literal { get; set; } = "";
+    public decimal? Parcial1 { get; set; }
+    public decimal? Parcial2 { get; set; }
+    public decimal? Final { get; set; }
+    public decimal? NotaFinal { get; set; }
+    public string Estado { get; set; } = "EN CURSO";
 }
 
 public class CalificacionHistorial
 {
     public string Periodo { get; set; } = "";
-    public string Clave { get; set; } = "";
-    public string Asignatura { get; set; } = "";
+    public string Codigo { get; set; } = "";
+    public string Descripcion { get; set; } = "";
     public int Creditos { get; set; }
     public decimal Nota { get; set; }
-    public string Literal { get; set; } = "";
     public string Estado { get; set; } = "";
 }
 
 public class AsignaturaFaltante
 {
-    public string Clave { get; set; } = "";
-    public string Nombre { get; set; } = "";
+    public string Codigo { get; set; } = "";
+    public string Descripcion { get; set; } = "";
     public int Creditos { get; set; }
-    public string Prerrequisitos { get; set; } = "";
-    public int CuatrimestreSugerido { get; set; }
+    public string Prerequisito { get; set; } = "";
 }
 
 public class CalificacionPeriodo
 {
     public string Periodo { get; set; } = "";
-    public decimal IndicePeriodo { get; set; }
+    public decimal IndiceDelPeriodo { get; set; }
+    public int CreditosAprobados { get; set; }
     public int CreditosCursados { get; set; }
-    public List<CalificacionHistorial> Asignaturas { get; set; } = new();
+    public List<CalificacionHistorial> Asignaturas { get; set; } = [];
 }

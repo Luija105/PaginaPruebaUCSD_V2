@@ -1,6 +1,9 @@
 @page "/consultasacademicas"
 @layout MainLayout
 @using PaginaPruebaUCSD_V2.Components
+@using PaginaPruebaUCSD_V2.Models
+@using PaginaPruebaUCSD_V2.Services
+@inject IStudentService StudentService
 @inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
 
 @{
@@ -16,20 +19,359 @@
             <p>Revisa tu información académica: notas, historial y estatus.</p>
         </div>
 
-        <div class="card-grid">
-            <div class="info-card">
-                <div class="info-card-icon">📊</div>
-                <div class="info-card-title">Notas del período</div>
-                <p class="info-card-body">Consulta las calificaciones del período académico actual.</p>
-                <div class="info-card-actions"><NavLink href="/NotasPeriodo" class="btn-inline solid">Ver notas</NavLink></div>
+        <!-- ── Fila de Selectores ─────────────────────────────────────────── -->
+        <div class="ca-selector-row">
+            <div class="ca-selector-group">
+                <label class="ca-selector-label">Seleccione Opción</label>
+                <select class="ca-select" @onchange="OnOpcionChanged">
+                    <option value="">-- Seleccione --</option>
+                    <option value="seleccion">Selección Actual</option>
+                    <option value="calificaciones">Calificaciones Actuales</option>
+                    <option value="historial">Histórico de Calificaciones</option>
+                    <option value="faltantes">Asignaturas Faltantes</option>
+                    <option value="record">Récord por Período</option>
+                </select>
             </div>
 
-            <div class="info-card">
-                <div class="info-card-icon">🎓</div>
-                <div class="info-card-title">Historial académico</div>
-                <p class="info-card-body">Revisa tu récord de notas por asignatura y período.</p>
-                <div class="info-card-actions"><NavLink href="/historialacademico" class="btn-inline solid">Ver notas</NavLink></div>
-            </div>
+            <!-- Dropdown desplegable secundario para elegir el período -->
+            @if (_opcion == "record" && _record != null && _record.Any())
+            {
+                <div class="ca-selector-group">
+                    <label class="ca-selector-label">Seleccione Período</label>
+                    <select class="ca-select" @onchange="OnPeriodoChanged">
+                        @foreach (var p in _record)
+                        {
+                            <option value="@p.Periodo" selected="@(p.Periodo == _periodoSeleccionado)">
+                                Período @p.Periodo
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
         </div>
+
+        <!-- ── Contenido Dinámico ─────────────────────────────────────────── -->
+        @if (_loading)
+        {
+            <div class="ca-loading">
+                <div class="fb-spinner"></div>
+                <span>Cargando datos...</span>
+            </div>
+        }
+        else if (_opcion == "seleccion")
+        {
+            <div class="ca-card">
+                <div class="ca-card-header">
+                    <h3>Selección Actual — Período @_periodoActual</h3>
+                    <span class="ca-badge">@(_seleccion?.Count ?? 0) asignaturas · @(_seleccion?.Sum(a => a.Creditos) ?? 0) créditos</span>
+                </div>
+                <div class="schedule-table-wrapper">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>CÓD.</th>
+                                <th>CRÉD.</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th>SECC.</th>
+                                <th>LUNES</th>
+                                <th>MARTES</th>
+                                <th>MIÉRCOLES</th>
+                                <th>JUEVES</th>
+                                <th>VIERNES</th>
+                                <th>SÁBADO</th>
+                                <th class="text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var a in _seleccion ?? [])
+                            {
+                                <tr>
+                                    <td><span class="code-pill">@a.Codigo</span></td>
+                                    <td class="text-center font-medium">@a.Creditos</td>
+                                    <td class="subject-name">@a.Descripcion</td>
+                                    <td class="text-center section-cell">@a.Seccion</td>
+                                    <td>@RenderSlot(a.Lunes)</td>
+                                    <td>@RenderSlot(a.Martes)</td>
+                                    <td>@RenderSlot(a.Miercoles)</td>
+                                    <td>@RenderSlot(a.Jueves)</td>
+                                    <td>@RenderSlot(a.Viernes)</td>
+                                    <td>@RenderSlot(a.Sabado)</td>
+                                    <td class="text-center">
+                                        <span class="status-chip @(a.Estado == "ABIERTA" ? "status-open" : "status-closed")">
+                                            @a.Estado
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (_opcion == "calificaciones")
+        {
+            <div class="ca-card">
+                <div class="ca-card-header">
+                    <h3>Calificaciones Actuales — Período @_periodoActual</h3>
+                    <span class="ca-badge">@(_calificaciones?.Count ?? 0) asignaturas</span>
+                </div>
+                <div class="schedule-table-wrapper">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>CÓD.</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th>CRÉD.</th>
+                                <th class="text-center">PARCIAL 1</th>
+                                <th class="text-center">PARCIAL 2</th>
+                                <th class="text-center">FINAL</th>
+                                <th class="text-center">NOTA FINAL</th>
+                                <th class="text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in _calificaciones ?? [])
+                            {
+                                <tr>
+                                    <td><span class="code-pill">@c.Codigo</span></td>
+                                    <td class="subject-name">@c.Descripcion</td>
+                                    <td class="text-center font-medium">@c.Creditos</td>
+                                    <td class="text-center">@FormatNota(c.Parcial1)</td>
+                                    <td class="text-center">@FormatNota(c.Parcial2)</td>
+                                    <td class="text-center">@FormatNota(c.Final)</td>
+                                    <td class="text-center"><strong>@FormatNota(c.NotaFinal)</strong></td>
+                                    <td class="text-center">
+                                        <span class="status-chip @EstadoClass(c.Estado)">@c.Estado</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (_opcion == "historial")
+        {
+            <div class="ca-card">
+                <div class="ca-card-header">
+                    <h3>Histórico de Calificaciones</h3>
+                    <span class="ca-badge">@(_historial?.Count ?? 0) registros</span>
+                </div>
+                <div class="schedule-table-wrapper">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>PERÍODO</th>
+                                <th>CÓD.</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th class="text-center">CRÉD.</th>
+                                <th class="text-center">NOTA</th>
+                                <th class="text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var h in _historial ?? [])
+                            {
+                                <tr>
+                                    <td class="font-medium">@h.Periodo</td>
+                                    <td><span class="code-pill">@h.Codigo</span></td>
+                                    <td class="subject-name">@h.Descripcion</td>
+                                    <td class="text-center">@h.Creditos</td>
+                                    <td class="text-center font-medium">@h.Nota.ToString("F0")</td>
+                                    <td class="text-center">
+                                        <span class="status-chip @EstadoClass(h.Estado)">@h.Estado</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (_opcion == "faltantes")
+        {
+            <div class="ca-card">
+                <div class="ca-card-header">
+                    <h3>Asignaturas Faltantes</h3>
+                    <span class="ca-badge">@(_faltantes?.Count ?? 0) pendientes · @(_faltantes?.Sum(f => f.Creditos) ?? 0) créditos</span>
+                </div>
+                <div class="schedule-table-wrapper">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>CÓD.</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th class="text-center">CRÉD.</th>
+                                <th>PREREQUISITO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var f in _faltantes ?? [])
+                            {
+                                <tr>
+                                    <td><span class="code-pill">@f.Codigo</span></td>
+                                    <td class="subject-name">@f.Descripcion</td>
+                                    <td class="text-center font-medium">@f.Creditos</td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(f.Prerequisito))
+                                        {
+                                            <span class="empty-slot">—</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="code-pill">@f.Prerequisito</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (_opcion == "record")
+        {
+            var periodo = RecordPeriodoSeleccionado;
+
+            if (periodo != null)
+            {
+                <div class="ca-card">
+                    <div class="ca-card-header">
+                        <h3>Período @periodo.Periodo</h3>
+                        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+                            <span class="ca-badge">Índice: @periodo.IndiceDelPeriodo.ToString("F2")</span>
+                            <span class="ca-badge">Créditos: @periodo.CreditosAprobados / @periodo.CreditosCursados</span>
+                        </div>
+                    </div>
+                    <div class="schedule-table-wrapper">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>CÓD.</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th class="text-center">CRÉD.</th>
+                                    <th class="text-center">NOTA</th>
+                                    <th class="text-center">ESTADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var a in periodo.Asignaturas ?? [])
+                                {
+                                    <tr>
+                                        <td><span class="code-pill">@a.Codigo</span></td>
+                                        <td class="subject-name">@a.Descripcion</td>
+                                        <td class="text-center">@a.Creditos</td>
+                                        <td class="text-center font-medium">@a.Nota.ToString("F0")</td>
+                                        <td class="text-center">
+                                            <span class="status-chip @EstadoClass(a.Estado)">@a.Estado</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="ca-empty">No hay datos disponibles para el período seleccionado.</div>
+            }
+        }
+        else if (!string.IsNullOrEmpty(_opcion))
+        {
+            <div class="ca-empty">No se encontraron datos para esta consulta.</div>
+        }
     </main>
 </div>
+
+@code {
+    private string _opcion = "";
+    private string _periodoActual = "20263";
+    private string _periodoSeleccionado = "";
+    private bool _loading = false;
+
+    private List<Asignatura>? _seleccion = null;
+    private List<Calificacion>? _calificaciones = null;
+    private List<CalificacionHistorial>? _historial = null;
+    private List<AsignaturaFaltante>? _faltantes = null;
+    private List<CalificacionPeriodo>? _record = null;
+
+    private CalificacionPeriodo? RecordPeriodoSeleccionado =>
+        _record?.FirstOrDefault(p => p.Periodo == _periodoSeleccionado)
+        ?? _record?.FirstOrDefault();
+
+    private int StudentId => AuthService.CurrentStudent?.Id ?? 0;
+
+    private async Task OnOpcionChanged(ChangeEventArgs e)
+    {
+        _opcion = e.Value?.ToString() ?? "";
+        _loading = true;
+        StateHasChanged();
+
+        try
+        {
+            switch (_opcion)
+            {
+                case "seleccion":
+                    _seleccion ??= await StudentService.GetSeleccionActualAsync(StudentId);
+                    break;
+                case "calificaciones":
+                    _calificaciones ??= await StudentService.GetCalificacionesActualesAsync(StudentId);
+                    break;
+                case "historial":
+                    _historial ??= await StudentService.GetHistorialCalificacionesAsync(StudentId);
+                    break;
+                case "faltantes":
+                    _faltantes ??= await StudentService.GetAsignaturasFaltantesAsync(StudentId);
+                    break;
+                case "record":
+                    if (_record is null)
+                    {
+                        _record = await StudentService.GetRecordPorPeriodoAsync(StudentId);
+                    }
+                    if (string.IsNullOrEmpty(_periodoSeleccionado) && _record?.Any() == true)
+                    {
+                        _periodoSeleccionado = _record.First().Periodo;
+                    }
+                    break;
+            }
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void OnPeriodoChanged(ChangeEventArgs e)
+    {
+        _periodoSeleccionado = e.Value?.ToString() ?? "";
+    }
+
+    private RenderFragment RenderSlot(string slot) => __builder =>
+    {
+        if (string.IsNullOrWhiteSpace(slot))
+        {
+            <span class="empty-slot">—</span>
+        }
+        else
+        {
+            var isVirtual = slot.Contains("(VRTUAL)");
+            <div class="time-slot-pill @(isVirtual ? "virtual-pill" : "presencial-pill")">
+                <span>@slot.Replace("(VRTUAL)", "").Replace("(EPCLA1)", "").Trim()</span>
+                <small class="slot-type">@(isVirtual ? "VIRTUAL" : "PRESENCIAL")</small>
+            </div>
+        }
+    };
+
+    private static string FormatNota(decimal? nota) =>
+        nota.HasValue ? nota.Value.ToString("F0") : "—";
+
+    private static string EstadoClass(string estado) => estado switch
+    {
+        "APROBADA" => "status-open",
+        "EN CURSO" => "status-open",
+        "REPROBADA" => "status-closed",
+        "RETIRADA" => "status-closed",
+        _ => ""
+    };
+}

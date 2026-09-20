@@ -4,24 +4,34 @@
 <header class="Navigationbar">
     <!-- Top strip -->
     <div class="Navigationbar-top">
-    <NavLink class="Navigationbar-brand" href="/dashboard">
-        <div class="Navigationbar-logo">
-            <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="Logo UCSD" width="50">
-        </div>
-        <div>
-            <p class="Navigationbar-university">Universidad Catolica de Santo Domingo</p>
-            <p class="Navigationbar-system">Sistema de Servicios Estudiantiles</p>
-        </div>
-    </NavLink>
+        <NavLink class="Navigationbar-brand" href="/dashboard">
+            <div class="Navigationbar-logo">
+                <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="Logo UCSD">
+            </div>
+            <div class="Navigationbar-titles">
+                <p class="Navigationbar-university">
+                    <span class="univ-full">Universidad Católica de Santo Domingo</span>
+                    <span class="univ-short">UCSD</span>
+                </p>
+                <p class="Navigationbar-system">Sistema de Servicios Estudiantiles</p>
+            </div>
+        </NavLink>
 
         <div class="Navigationbar-user">
             <span class="Navigationbar-welcome">Bienvenido/a, <strong>@StudentName</strong></span>
             <button class="btn-logout" @onclick="OnLogout">Cerrar sesión</button>
+
+            <!-- Hamburger Button -->
+            <button class="hamburger-btn @(_mobileMenuOpen ? "open" : "")" @onclick="ToggleMobileMenu" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </div>
 
-    <!-- Diagonal sections -->
-    <div class="Navigationbar-sections">
+    <!-- Navigation Sections -->
+    <div class="Navigationbar-sections @(_mobileMenuOpen ? "mobile-show" : "")">
         @foreach (var (section, i) in NavigationConfig.Sections.Select((s, i) => (s, i)))
         {
             bool isLast = i == NavigationConfig.Sections.Count - 1;
@@ -52,7 +62,7 @@
                             }
                             else
                             {
-                                <NavLink class="Navigationbar-dropdown-item" href="@item.Href" Match="NavLinkMatch.Prefix">@item.Label</NavLink>
+                                <NavLink class="Navigationbar-dropdown-item" href="@item.Href" Match="NavLinkMatch.Prefix" @onclick="CloseAll">@item.Label</NavLink>
                             }
                         }
                     </div>
@@ -67,7 +77,17 @@
     [Parameter] public EventCallback OnLogout { get; set; }
 
     private string? _openId;
+    private bool _mobileMenuOpen = false;
 
     private void ToggleSection(string id) =>
         _openId = _openId == id ? null : id;
-}
+
+    private void ToggleMobileMenu() =>
+        _mobileMenuOpen = !_mobileMenuOpen;
+
+    private void CloseAll()
+    {
+        _openId = null;
+        _mobileMenuOpen = false;
+    }
+} 
