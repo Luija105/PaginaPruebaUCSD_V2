@@ -3,30 +3,49 @@
 @using PaginaPruebaUCSD_V2.Models
 @using PaginaPruebaUCSD_V2.Services
 @inject IStudentService StudentService
-@inject PaginaPruebaUCSD_V2.Services.IAuthService AuthService
+@inject IAuthService AuthService
 
 <div class="login-shell">
     <!-- Left branding panel -->
     <div class="login-brand">
-       <div class="brand-logo">
-    <div class="logo-image-container">
-        <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="logoUCSD" width="100">
-    </div>
-            <h1>Universidad Catolica de Santo Domingo</h1>
-        
-        </div>   
+        <div class="brand-logo">
+            <div class="logo-image-container">
+                <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="logoUCSD" width="100">
+            </div>
+            <span class="logo-name">Universidad Catolica de Santo Domingo</span>
+        </div>
 
         <div class="brand-body">
             <h1 class="brand-title">Portal de Servicios<br />Estudiantiles</h1>
-            <p class="brand-sub">Accede a tu historial académico, gestiona tu matrícula,
-                consulta tus finanzas y más, todo en un solo lugar.</p>
+            <p class="brand-sub">
+                Accede a tu historial académico, gestiona tu matrícula,
+                consulta tus finanzas y más, todo en un solo lugar.
+            </p>
 
-            <ul class="feature-list">
-                @foreach (var feat in _features)
-                {
-                    <li><span class="feat-check">✓</span> @feat</li>
-                }
-            </ul>
+
+            <!-- Carousel posicionado justo debajo del texto descriptivo -->
+
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://www.ucsd.edu.do/wp-content/uploads/2025/05/Arte-informativo-Direccion-de-Tecnologia-Educativa_WEB-2.png"
+                             class="d-block w-100"
+                             style="height: 530px; object-fit: contain; background-color: #f8fafc;"
+                             alt="Noticias 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="sample-data\Calendario Grado.png"
+                             class="d-block w-100"
+                             style="height: 530px; object-fit: contain; background-color: #f8fafc;"
+                             alt="CalendarioGrado">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="sample-data\Calendario PosGrado.png" class="d-block w-100"
+                             style="height: 530px; object-fit: contain; background-color: #f8fafc;"
+                             alt="CalendarioPosGrado">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <p class="brand-footer">© @DateTime.Now.Year Universidad Catolica de Santo Domingo. Todos los derechos reservados.</p>
@@ -48,7 +67,7 @@
 
                 <div class="field">
                     <label>Contraseña</label>
-                    <InputText type="password" @bind-Value="_creds.Password" placeholder="••••••••" class="input" />
+                    <InputText type="password" @bind-Value="_creds.Password" placeholder="•••••••••••" class="input" />
                 </div>
 
                 @if (_error is not null)
@@ -72,21 +91,14 @@
     [Parameter] public EventCallback<Student> OnSuccess { get; set; }
 
     private readonly AuthCredentials _creds = new();
-    private bool   _loading;
+    private bool _loading;
     private string? _error;
 
-    private readonly string[] _features =
-    [
-        "Historial y notas académicas",
-        "Matrícula y carga académica",
-        "Estado de cuenta y pagos",
-        "Certificaciones y servicios",
-    ];
 
     private async Task HandleSubmit()
     {
         _loading = true;
-        _error   = null;
+        _error = null;
         try
         {
             var student = await StudentService.LoginAsync(_creds.Matricula, _creds.Password);

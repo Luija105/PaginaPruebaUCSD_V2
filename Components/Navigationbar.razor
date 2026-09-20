@@ -1,0 +1,73 @@
+@using PaginaPruebaUCSD_V2.Configuration
+@using Microsoft.AspNetCore.Components.Routing
+
+<header class="Navigationbar">
+    <!-- Top strip -->
+    <div class="Navigationbar-top">
+    <NavLink class="Navigationbar-brand" href="/dashboard">
+        <div class="Navigationbar-logo">
+            <img src="https://www.ucsd.edu.do/wp-content/uploads/2024/01/cropped-PHOTO-2023-12-21-15-00-32-1-768x768.png" alt="Logo UCSD" width="50">
+        </div>
+        <div>
+            <p class="Navigationbar-university">Universidad Catolica de Santo Domingo</p>
+            <p class="Navigationbar-system">Sistema de Servicios Estudiantiles</p>
+        </div>
+    </NavLink>
+
+        <div class="Navigationbar-user">
+            <span class="Navigationbar-welcome">Bienvenido/a, <strong>@StudentName</strong></span>
+            <button class="btn-logout" @onclick="OnLogout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <!-- Diagonal sections -->
+    <div class="Navigationbar-sections">
+        @foreach (var (section, i) in NavigationConfig.Sections.Select((s, i) => (s, i)))
+        {
+            bool isLast = i == NavigationConfig.Sections.Count - 1;
+            bool isOpen = _openId == section.Id;
+
+            <div class="Navigationbar-section @(isOpen ? "open" : "")"
+                 @onmouseenter="() => _openId = section.Id"
+                 @onmouseleave="() => _openId = null">
+
+                <button class="Navigationbar-section-btn" @onclick="() => ToggleSection(section.Id)">
+                    @section.Label
+                    <span class="Navigationbar-chevron @(isOpen ? "flipped" : "")">▾</span>
+                </button>
+
+                @if (!isLast)
+                {
+                    <div class="Navigationbar-divider" />
+                }
+
+                @if (isOpen)
+                {
+                    <div class="Navigationbar-dropdown">
+                        @foreach (var item in section.Items)
+                        {
+                            if (item.Href.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <a class="Navigationbar-dropdown-item" href="@item.Href" target="_blank" rel="noopener">@item.Label</a>
+                            }
+                            else
+                            {
+                                <NavLink class="Navigationbar-dropdown-item" href="@item.Href" Match="NavLinkMatch.Prefix">@item.Label</NavLink>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</header>
+
+@code {
+    [Parameter] public string StudentName { get; set; } = "";
+    [Parameter] public EventCallback OnLogout { get; set; }
+
+    private string? _openId;
+
+    private void ToggleSection(string id) =>
+        _openId = _openId == id ? null : id;
+}

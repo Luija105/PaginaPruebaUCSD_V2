@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch in Vivaldi",
+      "url": "https://5t0gnv1x-5032.use2.devtunnels.ms/", // 👈 Change to your local server port
+      "runtimeExecutable": "C:\\Users\\luija\\AppData\\Local\\Vivaldi\\Application\\vivaldi.exe" // 👈 Tells VS Code to look for Vivaldi instead of Chrome
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 namespace PaginaPruebaUCSD_V2.Models;
 
 // ── Domain models ─────────────────────────────────────────────────────────────
-// These classes mirror the SQL schema. Map them 1-to-1 with EF Core entities
-// or Dapper query results when switching from the mock service.
-
 public enum EstatusEstudiante { Activo, Inactivo, Egresado, Suspendido }
 
 public class Student
@@ -47,4 +44,53 @@ public class AuthCredentials
 {
     public string Matricula { get; set; } = "";
     public string Password { get; set; } = "";
+}
+
+// ── Modelos de Consultas Académicas (Agregados para resolver los errores CS0246) ──
+
+public class Asignatura
+{
+    public string Clave { get; set; } = "";
+    public string Nombre { get; set; } = "";
+    public int Creditos { get; set; }
+    public string Aula { get; set; } = "";
+    public string Horario { get; set; } = "";
+    public string Profesor { get; set; } = "";
+}
+
+public class Calificacion
+{
+    public string Clave { get; set; } = "";
+    public string Asignatura { get; set; } = "";
+    public int Creditos { get; set; }
+    public decimal NotaAcumulada { get; set; }
+    public string Literal { get; set; } = "";
+}
+
+public class CalificacionHistorial
+{
+    public string Periodo { get; set; } = "";
+    public string Clave { get; set; } = "";
+    public string Asignatura { get; set; } = "";
+    public int Creditos { get; set; }
+    public decimal Nota { get; set; }
+    public string Literal { get; set; } = "";
+    public string Estado { get; set; } = "";
+}
+
+public class AsignaturaFaltante
+{
+    public string Clave { get; set; } = "";
+    public string Nombre { get; set; } = "";
+    public int Creditos { get; set; }
+    public string Prerrequisitos { get; set; } = "";
+    public int CuatrimestreSugerido { get; set; }
+}
+
+public class CalificacionPeriodo
+{
+    public string Periodo { get; set; } = "";
+    public decimal IndicePeriodo { get; set; }
+    public int CreditosCursados { get; set; }
+    public List<CalificacionHistorial> Asignaturas { get; set; } = new();
 }

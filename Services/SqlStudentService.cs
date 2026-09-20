@@ -4,16 +4,6 @@ using PaginaPruebaUCSD_V2.Models;
 
 namespace PaginaPruebaUCSD_V2.Services;
 
-// ── SQL / API implementation ──────────────────────────────────────────────────
-// Client-side proxy that talks to a server API which accesses the database.
-// In Blazor WebAssembly you must NOT connect directly to SQL from the browser.
-// Create ASP.NET Core endpoints and call them from here via HttpClient.
-//
-// To activate: in Program.cs replace
-//   builder.Services.AddScoped<IStudentService, MockStudentService>();
-// with
-//   builder.Services.AddScoped<IStudentService, SqlStudentService>();
-
 public class SqlStudentService : IStudentService
 {
     private readonly HttpClient _http;
@@ -23,71 +13,130 @@ public class SqlStudentService : IStudentService
     // ── Autenticación ─────────────────────────────────────────────────────────
     public async Task<Student?> LoginAsync(string matricula, string password)
     {
-        var response = await _http.PostAsJsonAsync("api/auth/login",
-            new { Matricula = matricula, Password = password });
-        if (!response.IsSuccessStatusCode) return null;
-        return await response.Content.ReadFromJsonAsync<Student?>();
+        try
+        {
+            var response = await _http.PostAsJsonAsync("api/auth/login",
+                new { Matricula = matricula, Password = password });
+
+            if (!response.IsSuccessStatusCode) return null;
+            return await response.Content.ReadFromJsonAsync<Student?>();
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<Student?> GetStudentByMatriculaAsync(string matricula)
     {
-        return await _http.GetFromJsonAsync<Student?>(
-            $"api/students/by-matricula/{matricula}");
+        try
+        {
+            return await _http.GetFromJsonAsync<Student?>(
+                $"api/students/by-matricula/{matricula}");
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     // ── Dashboard ─────────────────────────────────────────────────────────────
     public async Task<AcademicRecord?> GetAcademicRecordAsync(int studentId)
     {
-        return await _http.GetFromJsonAsync<AcademicRecord?>(
-            $"api/students/{studentId}/academicrecord");
+        try
+        {
+            return await _http.GetFromJsonAsync<AcademicRecord?>(
+                $"api/students/{studentId}/academicrecord");
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<List<CreditPeriod>> GetCreditHistoryAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<CreditPeriod>?>(
-            $"api/students/{studentId}/credithistory");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<CreditPeriod>?>(
+                $"api/students/{studentId}/credithistory");
+            return result ?? new List<CreditPeriod>();
+        }
+        catch
+        {
+            return new List<CreditPeriod>();
+        }
     }
 
     // ── Consultas Académicas ──────────────────────────────────────────────────
 
-    /// <summary>GET api/students/{id}/seleccion-actual</summary>
     public async Task<List<Asignatura>> GetSeleccionActualAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<Asignatura>?>(
-            $"api/students/{studentId}/seleccion-actual");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<Asignatura>?>(
+                $"api/students/{studentId}/seleccion-actual");
+            return result ?? new List<Asignatura>();
+        }
+        catch
+        {
+            return new List<Asignatura>();
+        }
     }
 
-    /// <summary>GET api/students/{id}/calificaciones-actuales</summary>
     public async Task<List<Calificacion>> GetCalificacionesActualesAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<Calificacion>?>(
-            $"api/students/{studentId}/calificaciones-actuales");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<Calificacion>?>(
+                $"api/students/{studentId}/calificaciones-actuales");
+            return result ?? new List<Calificacion>();
+        }
+        catch
+        {
+            return new List<Calificacion>();
+        }
     }
 
-    /// <summary>GET api/students/{id}/historial-calificaciones</summary>
     public async Task<List<CalificacionHistorial>> GetHistorialCalificacionesAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<CalificacionHistorial>?>(
-            $"api/students/{studentId}/historial-calificaciones");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<CalificacionHistorial>?>(
+                $"api/students/{studentId}/historial-calificaciones");
+            return result ?? new List<CalificacionHistorial>();
+        }
+        catch
+        {
+            return new List<CalificacionHistorial>();
+        }
     }
 
-    /// <summary>GET api/students/{id}/asignaturas-faltantes</summary>
     public async Task<List<AsignaturaFaltante>> GetAsignaturasFaltantesAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<AsignaturaFaltante>?>(
-            $"api/students/{studentId}/asignaturas-faltantes");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<AsignaturaFaltante>?>(
+                $"api/students/{studentId}/asignaturas-faltantes");
+            return result ?? new List<AsignaturaFaltante>();
+        }
+        catch
+        {
+            return new List<AsignaturaFaltante>();
+        }
     }
 
-    /// <summary>GET api/students/{id}/record-por-periodo</summary>
     public async Task<List<CalificacionPeriodo>> GetRecordPorPeriodoAsync(int studentId)
     {
-        var result = await _http.GetFromJsonAsync<List<CalificacionPeriodo>?>(
-            $"api/students/{studentId}/record-por-periodo");
-        return result ?? [];
+        try
+        {
+            var result = await _http.GetFromJsonAsync<List<CalificacionPeriodo>?>(
+                $"api/students/{studentId}/record-por-periodo");
+            return result ?? new List<CalificacionPeriodo>();
+        }
+        catch
+        {
+            return new List<CalificacionPeriodo>();
+        }
     }
 }
