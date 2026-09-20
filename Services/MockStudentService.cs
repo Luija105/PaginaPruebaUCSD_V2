@@ -23,16 +23,17 @@ public class MockStudentService : IStudentService
 {
     private static readonly Student _demo = new()
     {
-        Id          = 1,
-        Matricula   = "1234",
-        Nombre      = "Alejandra",
-        Apellido    = "Morales Peña",
-        Carrera     = "Ingeniería en Sistemas Computacionales",
-        Facultad    = "Facultad de Ingeniería",
+        Id = 1,
+        Matricula = "1234",
+        Nombre = "Alejandra",
+        Apellido = "Morales Peña",
+        Carrera = "Ingeniería en Sistemas Computacionales",
+        Facultad = "Facultad de Ingeniería",
         AnioIngreso = 2021,
-        Estatus     = EstatusEstudiante.Activo,
+        Estatus = EstatusEstudiante.Activo,
     };
 
+    // ── Autenticación ─────────────────────────────────────────────────────────
     public async Task<Student?> LoginAsync(string matricula, string password)
     {
         await Task.Delay(600);
@@ -45,19 +46,20 @@ public class MockStudentService : IStudentService
         return matricula == _demo.Matricula ? _demo : null;
     }
 
+    // ── Dashboard ─────────────────────────────────────────────────────────────
     public async Task<AcademicRecord?> GetAcademicRecordAsync(int studentId)
     {
         await Task.Delay(300);
         if (studentId != 1) return null;
         return new AcademicRecord
         {
-            StudentId         = 1,
-            IndiceAcademico   = 3.72m,
-            IndiceAcumulado   = 3.65m,
+            StudentId = 1,
+            IndiceAcademico = 3.72m,
+            IndiceAcumulado = 3.65m,
             CreditosAprobados = 98,
-            CreditosTotales   = 160,
-            CuatrimestreActual    = 7,
-            MateriasCursadas  = 42,
+            CreditosTotales = 160,
+            CuatrimestreActual = 7,
+            MateriasCursadas = 42,
             MateriasAprobadas = 39,
         };
     }
@@ -76,4 +78,4 @@ public class MockStudentService : IStudentService
             new() { Periodo = "2023-II", Creditos = 14 },
         ];
     }
-}
+    }

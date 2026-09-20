@@ -153,7 +153,7 @@ html, body {
 }
 
 .logo-name {
-    font-size: 5 rem;
+    font-size: 5rem;
     font-weight: 700;
 }
 
@@ -1210,4 +1210,43 @@ html, body {
 
 .font-medium {
     font-weight: 500;
+}
+
+/* ── Tablas Responsive para Consultas ── */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
+}
+
+.ca-table {
+    width: 100%;
+    min-width: 600px; /* Fuerza scroll en móviles en lugar de apilar todo */
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+}
+
+    .ca-table th {
+        background-color: var(--slate-50);
+        color: var(--slate-600);
+        font-weight: 600;
+        padding: 0.75rem 1.25rem;
+        border-bottom: 2px solid var(--slate-200);
+        white-space: nowrap;
+    }
+
+    .ca-table td {
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid var(--slate-100);
+        color: var(--slate-700);
+        vertical-align: middle;
+    }
+
+    .ca-table tr:last-child td {
+        border-bottom: none;
+    }
+
+.fw-bold {
+    font-weight: 600;
 }
