@@ -1791,3 +1791,58 @@ header.Navigationbar {
     }
 }
 
+/* Boton desdcarga PDF*/
+
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.export-buttons-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-export {
+    border: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-png {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+    .btn-png:hover {
+        background-color: #bae6fd;
+    }
+
+.btn-pdf {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+    .btn-pdf:hover {
+        background-color: #fca5a5;
+    }
+
+.btn-excel {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+    .btn-excel:hover {
+        background-color: #86efac;
+    }

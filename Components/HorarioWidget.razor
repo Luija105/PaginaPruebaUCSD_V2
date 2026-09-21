@@ -1,12 +1,29 @@
 ﻿@using PaginaPruebaUCSD_V2.Models
+@inject IJSRuntime JSRuntime
 
-<div class="schedule-card-container">
+<div class="schedule-card-container" id="horario-container">
     <div class="schedule-header">
         <div>
             <h3 class="schedule-title">🗓️ Horario Académico</h3>
-            <p class="schedule-subtitle">Asignaturas e intinerario semanal seleccionado</p>
+            <p class="schedule-subtitle">Asignaturas e itinerario semanal seleccionado</p>
         </div>
-        <span class="schedule-badge">@Subjects.Count Asignaturas</span>
+
+        <div class="header-actions">
+            <span class="schedule-badge">@Subjects.Count Asignaturas</span>
+
+            <!-- Botones de Exportación -->
+            <div class="export-buttons-group">
+                <button type="button" class="btn-export btn-png" @onclick="ExportarImagen" title="Exportar como Imagen">
+                    📷 PNG
+                </button>
+                <button type="button" class="btn-export btn-pdf" @onclick="ExportarPDF" title="Exportar como PDF">
+                    📄 PDF
+                </button>
+                <button type="button" class="btn-export btn-excel" @onclick="ExportarExcel" title="Exportar a Excel">
+                    📊 Excel
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="schedule-table-wrapper">
@@ -70,6 +87,36 @@
         new HorarioModel { Code = "ISC132", Credits = 3, Description = "LENGUAJE DE PROGRAMACION", Section = "200", Viernes = "17:45/20:10 (EPCLA1)", Status = "ABIERTA" },
         new HorarioModel { Code = "ISC136", Credits = 4, Description = "BASE DE DATOS I", Section = "200", Martes = "17:45/19:20 (VRTUAL)", Jueves = "16:05/17:45 (VRTUAL)", Status = "ABIERTA" }
     };
+
+    private async Task ExportarImagen()
+    {
+        await JSRuntime.InvokeVoidAsync("exportHelpers.downloadAsImage", "horario-container", "Mi_Horario_UCSD");
+    }
+
+    private async Task ExportarPDF()
+    {
+        await JSRuntime.InvokeVoidAsync("exportHelpers.downloadAsPdf", "horario-container", "Mi_Horario_UCSD");
+    }
+
+    private async Task ExportarExcel()
+    {
+        var datosExcel = Subjects.Select(s => new
+        {
+            Código = s.Code,
+            Créditos = s.Credits,
+            Descripción = s.Description,
+            Sección = s.Section,
+            Lunes = s.Lunes,
+            Martes = s.Martes,
+            Miércoles = s.Miercoles,
+            Jueves = s.Jueves,
+            Viernes = s.Viernes,
+            Sábado = s.Sabado,
+            Estado = s.Status
+        }).ToList();
+
+        await JSRuntime.InvokeVoidAsync("exportHelpers.downloadAsExcel", datosExcel, "Mi_Horario_UCSD");
+    }
 
     private RenderFragment RenderTimeSlot(string slot) => __builder =>
     {
